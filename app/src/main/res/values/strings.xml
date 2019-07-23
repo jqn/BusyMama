@@ -2,4 +2,9 @@
     <string name="app_name">BusyMama</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="fcm_message">Busy Mama</string>
+
+    <string name="expense_reminder_notification_title">Busy Mama</string>
+    <string name="expense_reminder_notification_body">You are near a store. Remember to add your expense.</string>
+    <string name="main_notification_channel_name" translatable="false">expense_reminder</string>
+
 </resources>

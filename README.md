@@ -11,11 +11,13 @@ Busy Mama uses geolocation to recognize shop locations and remind the user to up
 
 ## Tools Used
 
-- [**Firebase**](https://firebase.google.com/) 17.0.1: For user authentication, storing data and image files. It will keep these features centralized, on the cloud, and easily available across other mobile devices that the user has.
+- [**Firebase**](https://firebase.google.com/) 17.0.1: For user authentication, and storing data. It will keep these features centralized, on the cloud, and easily available across other mobile devices that the user has.
+
+- [**Google Play Services**](https://firebase.google.com/) 17.0.0: For geolocation and geofencing
 
 ## Instructions
 
-Download or clone this repo on your machine, open the project using Android Studio. Go to [Firebase](https://firebase.google.com/), create an account, setup a project for Android, setup MLKit, as well as Firebase authentication, database and storage. Follow the instructions on Firebase console, and download the appropriate json file. Once Gradle builds the project, click "run" and choose an emulator.
+Download or clone this repo on your machine, open the project using Android Studio. Go to [Firebase](https://firebase.google.com/), create an account, setup a project for Android, setup MLKit, as well as Firebase authentication, database and storage. Follow the instructions on Firebase console, and download the appropriate json file. Once Gradle builds the project, click "run" and choose an emulator. A Google Services API key is also required.
 
 ## User Experience
 
@@ -28,7 +30,7 @@ Download or clone this repo on your machine, open the project using Android Stud
 - [x] Get API Key
 - [x] Enable Places API
 - [x] Include API Key in project
-- [ ] Grant permissions
+- [x] Grant permissions
 - [ ] Create a Google API Client
 - [ ] Connect to Google Play Services
 - [ ] Create toggle to request location permission during runtime

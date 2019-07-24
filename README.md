@@ -23,6 +23,16 @@ Download or clone this repo on your machine, open the project using Android Stud
 
 ## TODO
 
+### Google Play Services
+
+- [x] Get API Key
+- [x] Enable Places API
+- [x] Include API Key in project
+- [ ] Grant permissions
+- [ ] Create a Google API Client
+- [ ] Connect to Google Play Services
+- [ ] Create toggle to request location permission during runtime
+
 ### Main Activity
 
 - [x] Implement geolocation

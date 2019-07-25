@@ -6,6 +6,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,10 +16,14 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
+import io.jqn.busymama.provider.PlaceContract;
 import io.jqn.busymama.utilities.NotificationUtils;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -25,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     // Constants
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
+    private static final int PLACE_PICKER_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,22 +92,62 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Toast.makeText(this, getString(R.string.need_location_permission_message), Toast.LENGTH_LONG).show();
             return;
         }
-        Toast.makeText(this, getString(R.string.location_permissions_granted_message), Toast.LENGTH_LONG).show();
+        try {
+            // Start a new Activity for the Place Picker API, this will trigger {@code #onActivityResult}
+            // when a place is selected or with the user cancels.
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            Intent i = builder.build(this);
+            startActivityForResult(i, PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.e(TAG, String.format("GooglePlayServices Not Available [%s]", e.getMessage()));
+        } catch (Exception e) {
+            Log.e(TAG, String.format("PlacePicker Exception: %s", e.getMessage()));
+        }
+
     }
+
+
+    /***
+     * Called when the Place Picker Activity returns back with a selected place (or after canceling)
+     *
+     * @param requestCode The request code passed when calling startActivityForResult
+     * @param resultCode  The result code specified by the second activity
+     * @param data        The Intent that carries the result data.
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK) {
+            Place place = PlacePicker.getPlace(this, data);
+            if (place == null) {
+                Log.i(TAG, "No place selected");
+                return;
+            }
+
+            // Extract the place information from the API
+            String placeName = place.getName().toString();
+            String placeAddress = place.getAddress().toString();
+            String placeID = place.getId();
+
+            // Insert a new place into DB
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(PlaceContract.PlaceEntry.COLUMN_PLACE_ID, placeID);
+            getContentResolver().insert(PlaceContract.PlaceEntry.CONTENT_URI, contentValues);
+        }
+    }
+
 
     @Override
     public void onResume() {
         super.onResume();
 
         // Initialize location permissions checkbox
-//        CheckBox locationPermissions = (CheckBox) findViewById(R.id.location_permission_checkbox);
-//        if (ActivityCompat.checkSelfPermission(MainActivity.this,
-//                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            locationPermissions.setChecked(false);
-//        } else {
-//            locationPermissions.setChecked(true);
-//            locationPermissions.setEnabled(false);
-//        }
+        CheckBox locationPermissions = (CheckBox) findViewById(R.id.location_permission_checkbox);
+        if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            locationPermissions.setChecked(false);
+        } else {
+            locationPermissions.setChecked(true);
+            locationPermissions.setEnabled(false);
+        }
     }
 
     public void onLocationPermissionClicked(View view) {

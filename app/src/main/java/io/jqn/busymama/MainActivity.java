@@ -9,6 +9,8 @@ import androidx.core.app.ActivityCompat;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,10 +20,16 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.jqn.busymama.provider.PlaceContract;
 import io.jqn.busymama.utilities.NotificationUtils;
@@ -32,6 +40,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
     private static final int PLACE_PICKER_REQUEST = 1;
+
+    // Member variables
+    private PlaceListAdapter mAdapter;
+    private GoogleApiClient mClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      */
     @Override
     public void onConnected(@Nullable Bundle connectionHint) {
+        refreshPlacesData();
         Log.i(TAG, "API Client Connection Successful!");
     }
 
@@ -78,6 +91,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {
         Log.e(TAG, "API Client Connection Failed!");
+    }
+
+
+    public void refreshPlacesData() {
+        Uri uri = PlaceContract.PlaceEntry.CONTENT_URI;
+        Cursor data = getContentResolver().query(
+                uri,
+                null,
+                null,
+                null,
+                null);
+
+        if (data == null || data.getCount() == 0) return;
+        List<String> guids = new ArrayList<String>();
+        while (data.moveToNext()) {
+            guids.add(data.getString(data.getColumnIndex(PlaceContract.PlaceEntry.COLUMN_PLACE_ID)));
+        }
+        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mClient,
+                guids.toArray(new String[guids.size()]));
+        placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+            @Override
+            public void onResult(@NonNull PlaceBuffer places) {
+                mAdapter.swapPlaces(places);
+
+            }
+        });
     }
 
 

@@ -23,10 +23,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlacePicker;
+//import com.google.android.gms.location.places.Place;
+//import com.google.android.gms.location.places.PlaceBuffer;
+//import com.google.android.gms.location.places.Places;
+//import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
+//import com.google.android.libraries.places.compat.PlaceBuffer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,16 +53,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Places.initialize(getApplicationContext(), "AIzaSyA9uKizzenbbzhrtWYwqbIzmC0ggH-BurA" );
+        PlacesClient placesClient = Places.createClient(this   );
+
         // Build up the LocationServices API client
         // Uses the addApi method to request the LocationServices API
         // Also uses enableAutoManage to automatically know when to connect/suspend the client
-        GoogleApiClient client = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(this, this)
-                .build();
+//        GoogleApiClient client = new GoogleApiClient.Builder(this)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(LocationServices.API)
+//                .addApi(Places.GEO_DATA_API)
+//                .enableAutoManage(this, this)
+//                .build();
     }
 
     /***
@@ -108,15 +114,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         while (data.moveToNext()) {
             guids.add(data.getString(data.getColumnIndex(PlaceContract.PlaceEntry.COLUMN_PLACE_ID)));
         }
-        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mClient,
-                guids.toArray(new String[guids.size()]));
-        placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-            @Override
-            public void onResult(@NonNull PlaceBuffer places) {
-                mAdapter.swapPlaces(places);
-
-            }
-        });
+//        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mClient,
+//                guids.toArray(new String[guids.size()]));
+//        placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+//            @Override
+//            public void onResult(@NonNull PlaceBuffer places) {
+//                mAdapter.swapPlaces(places);
+//
+//            }
+//        });
     }
 
 
@@ -131,17 +137,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Toast.makeText(this, getString(R.string.need_location_permission_message), Toast.LENGTH_LONG).show();
             return;
         }
-        try {
-            // Start a new Activity for the Place Picker API, this will trigger {@code #onActivityResult}
-            // when a place is selected or with the user cancels.
-            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-            Intent i = builder.build(this);
-            startActivityForResult(i, PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.e(TAG, String.format("GooglePlayServices Not Available [%s]", e.getMessage()));
-        } catch (Exception e) {
-            Log.e(TAG, String.format("PlacePicker Exception: %s", e.getMessage()));
-        }
+//        try {
+//            // Start a new Activity for the Place Picker API, this will trigger {@code #onActivityResult}
+//            // when a place is selected or with the user cancels.
+//            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+//            Intent i = builder.build(this);
+//            startActivityForResult(i, PLACE_PICKER_REQUEST);
+//        } catch (GooglePlayServicesNotAvailableException e) {
+//            Log.e(TAG, String.format("GooglePlayServices Not Available [%s]", e.getMessage()));
+//        } catch (Exception e) {
+//            Log.e(TAG, String.format("PlacePicker Exception: %s", e.getMessage()));
+//        }
 
     }
 
@@ -154,23 +160,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      * @param data        The Intent that carries the result data.
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK) {
-            Place place = PlacePicker.getPlace(this, data);
-            if (place == null) {
-                Log.i(TAG, "No place selected");
-                return;
-            }
-
-            // Extract the place information from the API
-            String placeName = place.getName().toString();
-            String placeAddress = place.getAddress().toString();
-            String placeID = place.getId();
-
-            // Insert a new place into DB
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(PlaceContract.PlaceEntry.COLUMN_PLACE_ID, placeID);
-            getContentResolver().insert(PlaceContract.PlaceEntry.CONTENT_URI, contentValues);
-        }
+//        if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK) {
+//            Place place = PlacePicker.getPlace(this, data);
+//            if (place == null) {
+//                Log.i(TAG, "No place selected");
+//                return;
+//            }
+//
+//            // Extract the place information from the API
+//            String placeName = place.getName().toString();
+//            String placeAddress = place.getAddress().toString();
+//            String placeID = place.getId();
+//
+//            // Insert a new place into DB
+//            ContentValues contentValues = new ContentValues();
+//            contentValues.put(PlaceContract.PlaceEntry.COLUMN_PLACE_ID, placeID);
+//            getContentResolver().insert(PlaceContract.PlaceEntry.CONTENT_URI, contentValues);
+//        }
     }
 
 

@@ -10,18 +10,22 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TableLayout;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity  {
+
+public class MainActivity extends AppCompatActivity {
 
     // Constants
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -35,6 +39,7 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
         // Add Toolbar to Main screen
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.dashbord_screen);
         setSupportActionBar(toolbar);
         // Set ViewPager for each Tab
         ViewPager viewPager = findViewById(R.id.viewpager);
@@ -69,9 +74,14 @@ public class MainActivity extends AppCompatActivity  {
         });
 
     }
-    // Add fragments to Tabs
-    private  void setupViewPager(ViewPager viewPager) {
 
+    // Add Fragments to Tabs
+    private void setupViewPager(ViewPager viewPager) {
+        Adapter adapter = new Adapter(getSupportFragmentManager());
+        adapter.addFragment(new ExpenseListFragment(), getString(R.string.expenses_tab));
+        adapter.addFragment(new MyPlacesFragment(), getString(R.string.my_places_tab));
+        adapter.addFragment(new SettingsFragment(), getString(R.string.settings_tab));
+        viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -94,7 +104,36 @@ public class MainActivity extends AppCompatActivity  {
         } else if (id == android.R.id.home) {
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
-        return  super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
+    }
+
+    static class Adapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public Adapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 
 

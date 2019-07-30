@@ -33,6 +33,4 @@ public class ExpenseListFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-
 }

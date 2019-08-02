@@ -17,8 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 /**
  * Provides UI for the expenses view.
  */
@@ -26,11 +24,14 @@ public class ExpenseListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Get a referenced to the RecyclerView from xml
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
         ContentAdapter adapter = new ContentAdapter(recyclerView.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
+        // Set the LayoutManager for measuring and positioning items views withing the
+        // RecyclerView into a linear list
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return recyclerView;
 
@@ -42,7 +43,7 @@ public class ExpenseListFragment extends Fragment {
         public TextView description;
 
         public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.fragment_expense_list, parent, false));
+            super(inflater.inflate(R.layout.expense_list, parent, false));
             avatar =  itemView.findViewById(R.id.list_avatar);
             name = itemView.findViewById(R.id.list_title);
             description = itemView.findViewById(R.id.list_desc);

@@ -25,16 +25,16 @@ public class ExpenseDetailActivity extends AppCompatActivity {
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         // Set title of Detail page
-        // collapsingToolbar.setTitle(getString(R.string.item_title));
+//         collapsingToolbar.setTitle(getString(R.string.item_title));
 
         int postion = getIntent().getIntExtra(EXTRA_POSITION, 0);
         Resources resources = getResources();
-        String[] places = resources.getStringArray(R.array.places);
-        collapsingToolbar.setTitle(places[postion % places.length]);
+        String[] expenses = resources.getStringArray(R.array.expenses);
+        collapsingToolbar.setTitle(expenses[postion % expenses.length]);
 
-        String[] placeDetails = resources.getStringArray(R.array.place_details);
-        TextView placeDetail = (TextView) findViewById(R.id.place_detail);
-        placeDetail.setText(placeDetails[postion % placeDetails.length]);
+        String[] storeDetails = resources.getStringArray(R.array.store_details);
+        TextView storeDetail = findViewById(R.id.place_detail);
+        storeDetail.setText(storeDetails[postion % storeDetails.length]);
 
         String[] placeLocations = resources.getStringArray(R.array.place_locations);
         TextView placeLocation = (TextView) findViewById(R.id.place_location);

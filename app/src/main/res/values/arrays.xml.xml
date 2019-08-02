@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="places">
-        <item>Palais Garnie</item>
+        <item>$150 07/10/2019 2:25 pm</item>
         <item>Piazza del Duomo</item>
         <item>Manhattan</item>
         <item>Senso-ji</item>
@@ -9,8 +9,7 @@
         <item>Table Mountain</item>
     </string-array>
     <string-array name="place_desc">
-        <item>The Palais Garnier which locates in Paris was built from 1861 for
-        the Paris Opera.
+        <item>Whole Foods
         </item>
         <item>Piazza del Duomo the cathedral which locates in Florence.</item>
         <item>Manhattan is the district in New York City</item>
@@ -86,5 +85,22 @@
         <item>@drawable/e</item>
         <item>@drawable/f</item>
     </array>
+    <string-array name="expenses">
+        <item>$150 07/10/2019 2:25 pm</item>
+        <item>$145 07/10/2019 1:45 pm</item>
+        <item>$34 07/10/2019 9:25 am</item>
+        <item>$200 07/09/2019 7:25 pm</item>
+        <item>$15 07/05/2019 8:00 am</item>
+        <item>$300 07/05/2019 5:25 pm</item>
+    </string-array>
+    <string-array name="store_details">
+        <item>Whole Foods
+        </item>
+        <item>King Soopers</item>
+        <item>Natural Grocers</item>
+        <item>King Soopers</item>
+        <item>Starbucks</item>
+        <item>Costco</item>
+    </string-array>
 </resources>
 

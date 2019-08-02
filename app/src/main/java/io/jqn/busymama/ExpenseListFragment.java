@@ -71,8 +71,8 @@ public class ExpenseListFragment extends Fragment {
 
         public ContentAdapter(Context context) {
             Resources resources = context.getResources();
-            mPlaces = resources.getStringArray(R.array.places);
-            mPlaceDesc = resources.getStringArray(R.array.place_desc);
+            mPlaces = resources.getStringArray(R.array.expenses);
+            mPlaceDesc = resources.getStringArray(R.array.store_details);
             TypedArray a = resources.obtainTypedArray(R.array.place_avator);
             mPlaceAvatars = new Drawable[a.length()];
             for (int i = 0; i < mPlaceAvatars.length; i++) {

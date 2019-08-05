@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import timber.log.Timber;
+
 /**
  * Provides UI for the expenses view.
  */
@@ -64,7 +66,8 @@ public class ExpenseListFragment extends Fragment {
      */
     public static class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
         // Ste numbers of List in RecyclerView
-        private static final int LENGTH = 18;
+        // TODO make this dynamic
+        private static final int LENGTH = 6;
 
         private final String[] mPlaces;
         private final String[] mPlaceDesc;

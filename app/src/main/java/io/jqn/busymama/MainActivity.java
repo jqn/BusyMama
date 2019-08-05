@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     // Member variables
     private DrawerLayout mDrawerLayout;
     private BottomSheetBehavior sheetBehavior;
+    private LinearLayout bottom_sheet;
 
 
     @Override
@@ -75,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        // click event for show/dismiss bottom sheet
+
 
     }
 

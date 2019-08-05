@@ -4,7 +4,7 @@
     android:id="@+id/transaction_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/ricepaper"
     android:orientation="vertical"
     android:padding="@dimen/margin_padding_size_small"
     app:behavior_hideable="false"
@@ -13,6 +13,7 @@
 
 
     <TextView
+        android:id="@+id/btn_transaction_bottom_sheet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

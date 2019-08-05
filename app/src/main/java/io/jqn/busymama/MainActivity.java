@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Member variables
     private DrawerLayout mDrawerLayout;
+    private BottomSheetBehavior sheetBehavior;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

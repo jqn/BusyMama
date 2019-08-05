@@ -18,4 +18,32 @@
     <dimen name="card_image_height">200dp</dimen>
     <dimen name="list_body">14sp</dimen>
     <dimen name="navheader_height">222dp</dimen>
+
+    <!--
+    # Material Design Dimensions
+    These dimensions are provided as per Material Design Guidelines
+    to adhere to a 8 dp baseline grid. (With the exception of the
+    toolbar and notification bar.).
+    ## References
+    - https://www.google.com/design/spec/layout/metrics-keylines.html
+    - https://material.io/guidelines/style/typography.html#typography-typeface
+-->
+
+    <!-- Margins & Padding, 8 dp baseline, https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-baseline-grids -->
+    <dimen name="margin_padding_size_small">8dp</dimen>
+    <dimen name="margin_padding_size_medium">16dp</dimen>
+    <dimen name="margin_padding_size_large">24dp</dimen>
+    <dimen name="margin_padding_size_xlarge">32dp</dimen>
+    <dimen name="margin_padding_size_xxlarge">40dp</dimen>
+
+    <!-- Launcher Icon Size, https://developer.android.com/guide/practices/ui_guidelines/icon_design_launcher.html#size -->
+    <dimen name="launcher_icon_size">@dimen/standard_touch_size</dimen>
+
+    <!-- Touch Target Size, https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-touch-target-size-->
+    <dimen name="standard_touch_size">48dp</dimen>
+
+    <!-- Toolbar, 4 dp baseline, https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-baseline-grids -->
+    <dimen name="toolbar_margin_size">4dp</dimen>
+    <dimen name="toolbar_icon_size">24dp</dimen>
+
 </resources>

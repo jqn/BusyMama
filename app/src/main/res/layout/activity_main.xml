@@ -37,9 +37,14 @@
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="150dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+        <!-- include bottom sheet -->
+        <include layout="@layout/transaction_bottom_sheet" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -51,5 +56,6 @@
         app:menu="@menu/menu_navigation">
 
     </com.google.android.material.navigation.NavigationView>
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

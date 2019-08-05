@@ -38,4 +38,8 @@
     </string>
     <string name="detail_location">"8 Rue Scribe, 75009 Paris, France"</string>
 
+    <!-- Text input placeholders -->
+    <string name="transaction_input_label">Add New Transaction</string>
+    <string name="transaction_input_placeholder">Amount</string>
+
 </resources>

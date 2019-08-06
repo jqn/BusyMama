@@ -22,11 +22,22 @@ android {
             resValue 'string', "api_key", BusyMama_ApiKey
         }
     }
+    // Butterknife requires Java 8.
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+ext {
+    retrofitLibVersion = "2.4.0"
+    supportLibVersion = "28.0.0"
+    exoplayerVersion = "2.8.3"
+    roomVersion = "2.1.0"
+    butterknifeVersion = "10.1.0"
 }
 
 dependencies {
-    def current_library_version = "28.0.0"
-    def room_version = "2.1.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -39,15 +50,21 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     // Material Design
-    implementation "com.android.support:palette-v7:$current_library_version"
-    implementation "com.android.support:recyclerview-v7:$current_library_version"
-    implementation "com.android.support:cardview-v7:$current_library_version"
-    implementation "com.android.support:design:$current_library_version"
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+//    implementation "com.android.support:palette-v7:$current_library_version"
+//    implementation "com.android.support:recyclerview-v7:$current_library_version"
+//    implementation "com.android.support:cardview-v7:$current_library_version"
+    implementation "com.android.support:design:${supportLibVersion}"
+    // timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
+    // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     // Room
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-runtime:${roomVersion}"
+    annotationProcessor "androidx.room:room-compiler:${roomVersion}"
+    // Butterknife
+    implementation "com.jakewharton:butterknife:${butterknifeVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
 
 }
 

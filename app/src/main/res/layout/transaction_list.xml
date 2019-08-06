@@ -11,7 +11,7 @@
         android:layout_width="@dimen/avator_size"
         android:layout_height="@dimen/avator_size"
         android:scaleType="centerCrop"
-        tools:src="@drawable/a_avator" />
+        tools:src="@drawable/ic_shopping_cart_black_24dp" />
 
     <TextView
         android:id="@+id/list_title"

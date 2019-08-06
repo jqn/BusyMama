@@ -1,4 +1,4 @@
-package io.jqn.busymama;
+package io.jqn.busymama.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,16 +17,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import timber.log.Timber;
+import io.jqn.busymama.R;
+import io.jqn.busymama.TransactionDetailActivity;
 
 /**
  * Provides UI for the expenses view.
  */
-public class ExpenseListFragment extends Fragment {
+public class TransactionListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Get a referenced to the RecyclerView from xml
+        // Get a reference to the RecyclerView from xml
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
         ContentAdapter adapter = new ContentAdapter(recyclerView.getContext());
@@ -53,8 +54,8 @@ public class ExpenseListFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, ExpenseDetailActivity.class);
-                    intent.putExtra(ExpenseDetailActivity.EXTRA_POSITION, getAdapterPosition());
+                    Intent intent = new Intent(context, TransactionDetailActivity.class);
+                    intent.putExtra(TransactionDetailActivity.EXTRA_POSITION, getAdapterPosition());
                     context.startActivity(intent);
                 }
             });

@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ExpenseDetailActivity"></activity>
+        <activity android:name=".TransactionDetailActivity"></activity>
         <activity android:name=".SettingsActivity" />
 
         <meta-data

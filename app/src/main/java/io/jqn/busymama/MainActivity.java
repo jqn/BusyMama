@@ -26,6 +26,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.jqn.busymama.fragments.TransactionListFragment;
 import timber.log.Timber;
 
 
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new ExpenseListFragment(), getString(R.string.expenses_tab));
+        adapter.addFragment(new TransactionListFragment(), getString(R.string.expenses_tab));
         adapter.addFragment(new MyPlacesFragment(), getString(R.string.my_places_tab));
         adapter.addFragment(new SettingsFragment(), getString(R.string.settings_tab));
         viewPager.setAdapter(adapter);

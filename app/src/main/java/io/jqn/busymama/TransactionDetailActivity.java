@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
-public class ExpenseDetailActivity extends AppCompatActivity {
+public class TransactionDetailActivity extends AppCompatActivity {
     public static final String EXTRA_POSITION = "position";
 
     @Override

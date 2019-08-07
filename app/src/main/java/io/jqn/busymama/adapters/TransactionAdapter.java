@@ -78,9 +78,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.transactionDescriptionView.setText(description);
         holder.updatedAtView.setText(updatedAt);
 
-        // Programmatically set the text and color for the priority TextView
-        String priorityString = "" + priority; // converts int to String
-        holder.priorityView.setText(priorityString);
 
     }
 
@@ -93,7 +90,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         if (mTransactionEntries == null) {
             return 0;
         }
-        Timber.d("entries" + mTransactionEntries.size() );
+        Timber.d("entries %s", mTransactionEntries.size() );
         return mTransactionEntries.size();
     }
 

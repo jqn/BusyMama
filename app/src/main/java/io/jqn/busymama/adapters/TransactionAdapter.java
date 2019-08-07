@@ -70,12 +70,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public void onBindViewHolder(TransactionViewHolder holder, int position) {
         // Determine the values of the wanted data
         TransactionEntry transactionEntry = mTransactionEntries.get(position);
-        String description = transactionEntry.getAmount();
-        int priority = transactionEntry.getPriority();
+        String place = transactionEntry.getPlace();
+        int amount = transactionEntry.getAmount();
         String updatedAt = dateFormat.format(transactionEntry.getUpdatedAt());
 
         //Set values
-        holder.transactionDescriptionView.setText(description);
+        holder.transactionDescriptionView.setText(place);
         holder.updatedAtView.setText(updatedAt);
 
 

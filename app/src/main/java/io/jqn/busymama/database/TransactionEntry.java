@@ -1,5 +1,6 @@
 package io.jqn.busymama.database;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -10,21 +11,22 @@ import java.util.Date;
 public class TransactionEntry {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String amount;
-    private int priority;
+    private String place;
+    private int amount;
+    @ColumnInfo(name = "updated_at")
     private Date updatedAt;
 
     @Ignore
-    public TransactionEntry(String amount, int priority, Date updatedAt) {
+    public TransactionEntry(int amount, String place, Date updatedAt) {
         this.amount = amount;
-        this.priority = priority;
+        this.place = place;
         this.updatedAt = updatedAt;
     }
 
-    public TransactionEntry(int id, String amount, int priority, Date updatedAt) {
+    public TransactionEntry(int id, int amount, String place, Date updatedAt) {
         this.id = id;
         this.amount = amount;
-        this.priority = priority;
+        this.place = place;
         this.updatedAt = updatedAt;
     }
 
@@ -36,20 +38,20 @@ public class TransactionEntry {
         this.id = id;
     }
 
-    public String getAmount() {
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
     }
 
     public Date getUpdatedAt() {

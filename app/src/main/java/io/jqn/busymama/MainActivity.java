@@ -8,9 +8,13 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -26,19 +30,24 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.jqn.busymama.database.BusyMamaDatabase;
 import io.jqn.busymama.fragments.TransactionListFragment;
 import timber.log.Timber;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnKeyListener {
 
     // Constants
     public static final String TAG = MainActivity.class.getSimpleName();
+
+    // Fields for views
+    EditText mEditText;
 
     // Member variables
     private DrawerLayout mDrawerLayout;
     private BottomSheetBehavior sheetBehavior;
     private LinearLayout bottom_sheet;
+    private BusyMamaDatabase mDatabase;
 
 
     @Override
@@ -62,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         // Create Navigation drawer and inflate layout
         NavigationView navigationView = findViewById(R.id.nav_view);
         mDrawerLayout = findViewById(R.id.drawer);
+        // Initialize transaction entry view
+        mEditText = findViewById(R.id.transaction_entry);
+        mEditText.setOnKeyListener(this);
         // Add a menu icon to Toolbar
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -85,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // click event for show/dismiss bottom sheet
+        //  Initialize member variable for the database
+        mDatabase = BusyMamaDatabase.getInstance(getApplicationContext());
 
 
     }
@@ -122,6 +135,25 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * onSaveButtonClicked is called when the "save transaction" button is clicked.
+     * It retrieves user input and inserts the new transaction data into the underlying database.
+     */
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+        Timber.d("event %s", event);
+        // If the event is a key-down event on the "enter" button
+        if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                (keyCode == KeyEvent.KEYCODE_ENTER)) {
+            // Perform action on key press
+            Timber.d("amount %s", mEditText.getText());
+            return true;
+        }
+        return false;
+
+    }
+
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -150,9 +182,11 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
-
-
 }
+
+
+
+
 
 
 

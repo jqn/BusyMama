@@ -12,7 +12,7 @@ import java.util.List;
 @Dao
 public interface TransactionDao {
 
-    @Query("SELECT * FROM `transaction` ORDER BY priority")
+    @Query("SELECT * FROM `transaction` ORDER BY id")
     List<TransactionEntry> loadAllTasks();
 
     @Insert

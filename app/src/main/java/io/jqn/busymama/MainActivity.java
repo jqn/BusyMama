@@ -28,9 +28,12 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import io.jqn.busymama.adapters.TransactionAdapter;
 import io.jqn.busymama.database.BusyMamaDatabase;
+import io.jqn.busymama.database.TransactionEntry;
 import io.jqn.busymama.fragments.TransactionListFragment;
 import timber.log.Timber;
 
@@ -100,7 +103,13 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
         //  Initialize member variable for the database
         mDatabase = BusyMamaDatabase.getInstance(getApplicationContext());
 
+        Timber.d("Transactions %s", mDatabase.transactionDao().loadAllTransactions());
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Timber.d("on resume called");
     }
 
     // Add Fragments to Tabs
@@ -136,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
     }
 
     /**
-     * onSaveButtonClicked is called when the "save transaction" button is clicked.
+     * onKey is called when the "enter" button is clicked.
      * It retrieves user input and inserts the new transaction data into the underlying database.
      */
     @Override
@@ -148,11 +157,28 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
                 (keyCode == KeyEvent.KEYCODE_ENTER)) {
             // Perform action on key press
             Timber.d("amount %s", mEditText.getText());
+            // assign edit text value to amount
+            int amount = Integer.parseInt(mEditText.getText().toString());
+            // assing current location to place
+            String place = "King soopers";
+            // Assign current date
+            Date date = new Date();
+            Timber.d("date %s", date);
+
+            final TransactionEntry transactionEntry = new TransactionEntry(amount, place, date);
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mDatabase.transactionDao().insertTransaction(transactionEntry);
+                }
+            });
+
             return true;
         }
         return false;
 
     }
+
 
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();

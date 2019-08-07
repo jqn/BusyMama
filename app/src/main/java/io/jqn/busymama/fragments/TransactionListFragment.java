@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,14 +13,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
+import io.jqn.busymama.AppExecutors;
 import io.jqn.busymama.R;
 import io.jqn.busymama.adapters.TransactionAdapter;
+import io.jqn.busymama.database.BusyMamaDatabase;
+import io.jqn.busymama.database.TransactionEntry;
+import timber.log.Timber;
 
 /**
  * Provides UI for the expenses view.
  */
 public class TransactionListFragment extends Fragment implements TransactionAdapter.ItemClickListener {
     private Context mContext;
+
+    // Database member variable
+//    public BusyMamaDatabase mDatabase;
+    private TransactionAdapter mAdapter;
+
+    private TransactionAdapter transactionAdapter;
 
     public TransactionListFragment() {
         // Required empty public constructor
@@ -27,7 +41,8 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mContext=context;
+        mContext = context;
+        Timber.d("on attach");
     }
 
     @Override
@@ -36,22 +51,41 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
         // Initialize the adapter and attach it to the RecyclerView
-        TransactionAdapter adapter = new TransactionAdapter(recyclerView.getContext(), this);
-        recyclerView.setAdapter(adapter);
+        mAdapter = new TransactionAdapter(recyclerView.getContext(), this);
+        recyclerView.setAdapter(mAdapter);
 
         recyclerView.setHasFixedSize(true);
         // Set the LayoutManager for measuring and positioning items views withing the
         // RecyclerView into a linear list
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        retrieveTransactions();
         return recyclerView;
 
     }
 
     @Override
-    public void onItemClickListener(int itemId) {
-        // Launch AddTaskActivity adding the itemId as an extra in the intent
+    public void onResume() {
+        super.onResume();
+        Timber.d("Timbeeeeeer! on resume");
     }
 
-//
+    @Override
+    public void onItemClickListener(int itemId) {
+        // Launch AddTransactionActivity adding the itemId as an extra in the intent
+    }
+
+    public void retrieveTransactions() {
+
+        final LiveData<List<TransactionEntry>> transactions = BusyMamaDatabase.getInstance(getContext()).transactionDao().loadAllTransactions();
+        transactions.observe(this, new Observer<List<TransactionEntry>>() {
+            @Override
+            public void onChanged(List<TransactionEntry> transactionEntries) {
+                Timber.d("We have transactions");
+                mAdapter.setTransactions(transactionEntries);
+            }
+        });
+
+    }
 
 }

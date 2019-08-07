@@ -1,5 +1,6 @@
 package io.jqn.busymama.database;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -13,14 +14,14 @@ import java.util.List;
 public interface TransactionDao {
 
     @Query("SELECT * FROM `transaction` ORDER BY id")
-    List<TransactionEntry> loadAllTasks();
+    LiveData<List<TransactionEntry>> loadAllTransactions();
 
     @Insert
-    void insertTask(TransactionEntry transactionEntry);
+    void insertTransaction(TransactionEntry transactionEntry);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateTask(TransactionEntry transactionEntry);
+    void updateTransaction(TransactionEntry transactionEntry);
 
     @Delete
-    void deleteTask(TransactionEntry transactionEntry);
+    void deleteTransaction(TransactionEntry transactionEntry);
 }

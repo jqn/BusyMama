@@ -35,6 +35,7 @@ ext {
     exoplayerVersion = "2.8.3"
     roomVersion = "2.1.0"
     butterknifeVersion = "10.1.0"
+    lifecycle_version = "2.0.0"
 }
 
 dependencies {
@@ -65,6 +66,9 @@ dependencies {
     // Butterknife
     implementation "com.jakewharton:butterknife:${butterknifeVersion}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:${lifecycle_version}"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:${lifecycle_version}"
 
 }
 

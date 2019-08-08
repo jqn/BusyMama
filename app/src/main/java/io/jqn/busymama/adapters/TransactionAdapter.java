@@ -10,13 +10,14 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
 import io.jqn.busymama.R;
 import io.jqn.busymama.database.TransactionEntry;
-import io.jqn.busymama.fragments.TransactionListFragment;
 import timber.log.Timber;
 
 /**
@@ -26,7 +27,7 @@ import timber.log.Timber;
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
 
     // Constant for date format
-    private static final String DATE_FORMAT = "dd/MM/yyy";
+    private static final String DATE_FORMAT = "dd/MM/yyy hh:mm:ss a";
 
     // Member variable to handle item clicks
     final private ItemClickListener mItemClickListener;
@@ -38,7 +39,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     /**
      * Constructor for the TransactionAdapter that initializes the Context.
-     *  @param context  the current Context
+     *
+     * @param context  the current Context
      * @param listener the ItemClickListener
      */
     public TransactionAdapter(Context context, ItemClickListener listener) {
@@ -70,13 +72,21 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public void onBindViewHolder(TransactionViewHolder holder, int position) {
         // Determine the values of the wanted data
         TransactionEntry transactionEntry = mTransactionEntries.get(position);
-        String place = transactionEntry.getPlace();
-        int amount = transactionEntry.getAmount();
+        float amount = transactionEntry.getAmount();
+        // Format the transaction amounts
+        NumberFormat format = NumberFormat.getCurrencyInstance();
+        format.setMaximumFractionDigits(2);
+        format.setCurrency(Currency.getInstance("USD"));
+        String formattedAmount = format.format(amount);
+
+        String transaction_amount = formattedAmount;
         String updatedAt = dateFormat.format(transactionEntry.getUpdatedAt());
+        String place = transactionEntry.getPlace();
 
         //Set values
-        holder.transactionDescriptionView.setText(place);
-        holder.updatedAtView.setText(updatedAt);
+        holder.amountView.setText(transaction_amount);
+        holder.transactionDescriptionView.setText(updatedAt);
+        holder.updatedAtView.setText(place);
 
 
     }
@@ -90,7 +100,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         if (mTransactionEntries == null) {
             return 0;
         }
-        Timber.d("entries %s", mTransactionEntries.size() );
+        Timber.d("entries %s", mTransactionEntries.size());
         return mTransactionEntries.size();
     }
 
@@ -111,9 +121,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     class TransactionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         // Class variables for the transaction description and priority TextViews
+        TextView amountView;
         TextView transactionDescriptionView;
         TextView updatedAtView;
-        TextView priorityView;
 
         /**
          * Constructor for the TransactionViewHolder.
@@ -123,8 +133,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         public TransactionViewHolder(View itemView) {
             super(itemView);
 
-            transactionDescriptionView = itemView.findViewById(R.id.list_title);
-            updatedAtView = itemView.findViewById(R.id.list_desc);
+            amountView = itemView.findViewById(R.id.transaction_amount);
+            transactionDescriptionView = itemView.findViewById(R.id.transaction_detail);
+            updatedAtView = itemView.findViewById(R.id.transaction_place);
             itemView.setOnClickListener(this);
         }
 

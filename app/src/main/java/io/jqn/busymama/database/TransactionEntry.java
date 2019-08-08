@@ -12,18 +12,18 @@ public class TransactionEntry {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String place;
-    private int amount;
+    private float amount;
     @ColumnInfo(name = "updated_at")
     private Date updatedAt;
 
     @Ignore
-    public TransactionEntry(int amount, String place, Date updatedAt) {
+    public TransactionEntry(float amount, String place, Date updatedAt) {
         this.amount = amount;
         this.place = place;
         this.updatedAt = updatedAt;
     }
 
-    public TransactionEntry(int id, int amount, String place, Date updatedAt) {
+    public TransactionEntry(int id, float amount, String place, Date updatedAt) {
         this.id = id;
         this.amount = amount;
         this.place = place;
@@ -46,7 +46,7 @@ public class TransactionEntry {
         this.place = place;
     }
 
-    public int getAmount() {
+    public float getAmount() {
         return amount;
     }
 

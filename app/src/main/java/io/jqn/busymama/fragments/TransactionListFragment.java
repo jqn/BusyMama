@@ -29,7 +29,6 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
     private Context mContext;
 
     // Database member variable
-//    public BusyMamaDatabase mDatabase;
     private TransactionAdapter mAdapter;
 
     private TransactionAdapter transactionAdapter;

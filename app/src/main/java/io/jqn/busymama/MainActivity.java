@@ -158,7 +158,8 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
             // Perform action on key press
             Timber.d("amount %s", mEditText.getText());
             // assign edit text value to amount
-            int amount = Integer.parseInt(mEditText.getText().toString());
+//            float amount = Integer.parseInt(mEditText.getText().toString());
+            float amount = Float.parseFloat(mEditText.getText().toString());
             // assing current location to place
             String place = "King soopers";
             // Assign current date

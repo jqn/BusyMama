@@ -7,34 +7,36 @@
     android:background="?android:attr/selectableItemBackground"
     android:padding="@dimen/md_keylines">
 
-    <ImageView
-        android:id="@+id/list_avatar"
-        android:layout_width="@dimen/avator_size"
-        android:layout_height="@dimen/avator_size"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/ic_shopping_cart_black_24dp" />
 
     <TextView
-        android:id="@+id/list_title"
-        android:layout_width="match_parent"
+        android:id="@+id/transaction_amount"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/md_keylines"
-        android:layout_toRightOf="@+id/list_avatar"
-        tools:text="@string/item_title"
+        tools:text="@string/transaction_amount"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textSize="@dimen/article_subheading" />
 
     <TextView
-        android:id="@+id/list_desc"
+        android:id="@+id/transaction_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/list_title"
         android:layout_marginLeft="@dimen/md_keylines"
-        android:layout_toRightOf="@+id/list_avatar"
+        android:layout_toRightOf="@+id/transaction_amount"
+        tools:text="@string/transaction_detail"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textSize="@dimen/article_subheading" />
+
+    <TextView
+        android:id="@+id/transaction_place"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/transaction_detail"
+        android:layout_marginLeft="@dimen/md_keylines"
+        android:layout_toRightOf="@+id/transaction_amount"
         android:textColor="@color/colorPrimaryDark"
         android:ellipsize="end"
         android:singleLine="true"
-        tools:text="@string/item_desc"
+        tools:text="@string/transaction_place"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textSize="@dimen/list_body" />
 </RelativeLayout>

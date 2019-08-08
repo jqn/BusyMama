@@ -9,7 +9,7 @@ import androidx.room.TypeConverters;
 
 import timber.log.Timber;
 
-@Database(entities = {TransactionEntry.class}, version = 1, exportSchema = false)
+@Database(entities = {TransactionEntry.class}, version = 2, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class BusyMamaDatabase extends RoomDatabase {
 

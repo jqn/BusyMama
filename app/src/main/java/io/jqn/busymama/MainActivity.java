@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -158,21 +159,28 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
             // Perform action on key press
             Timber.d("amount %s", mEditText.getText());
             // assign edit text value to amount
-//            float amount = Integer.parseInt(mEditText.getText().toString());
-            float amount = Float.parseFloat(mEditText.getText().toString());
-            // assing current location to place
-            String place = "King soopers";
-            // Assign current date
-            Date date = new Date();
-            Timber.d("date %s", date);
+            if (mEditText.getText().toString().matches("")) {
+                Toast toast = Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_LONG);
+                toast.show();
+            } else {
+                float amount = Float.parseFloat(mEditText.getText().toString());
+                // assing current location to place
+                String place = "King soopers";
+                // Assign current date
+                Date date = new Date();
+                Timber.d("date %s", date);
+                // Clear the text input
+                mEditText.getText().clear();
 
-            final TransactionEntry transactionEntry = new TransactionEntry(amount, place, date);
-            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-                    mDatabase.transactionDao().insertTransaction(transactionEntry);
-                }
-            });
+                final TransactionEntry transactionEntry = new TransactionEntry(amount, place, date);
+                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDatabase.transactionDao().insertTransaction(transactionEntry);
+                    }
+                });
+            }
+
 
             return true;
         }

@@ -72,8 +72,7 @@ import timber.log.Timber;
 
 import com.google.android.libraries.places.api.Places;
 
-public class MainActivity extends AppCompatActivity implements View.OnKeyListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements View.OnKeyListener {
 
     // Constants
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -85,12 +84,11 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
     private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
     // integer for permissions results request
     private static final int ALL_PERMISSIONS_RESULT = 1011;
+    private static final String KEY_LOCATION = "location";
+    // Keys for storing activity state.
     // A default location (Sydney, Australia) and default zoom to use when location permission is
     // not granted.
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
-    // Keys for storing activity state.
-
-    private static final String KEY_LOCATION = "location";
     // Fields for views
     EditText mEditText;
     ListView lstPlaces;
@@ -100,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
     private BottomSheetBehavior sheetBehavior;
     private LinearLayout bottom_sheet;
     private BusyMamaDatabase mDatabase;
+
+    // The entry points to the Places API.
     private PlacesClient mPlacesClient;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     // The geographical location where the device is currently located. That is, the last-known
@@ -141,6 +141,9 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
         String apiKey = getString(R.string.busymama_api_key);
         // Initialize Places client.
         Places.initialize(getApplicationContext(), apiKey);
+        // Create a new Places client instance.
+        mPlacesClient = Places.createClient(this);
+
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         // Add Toolbar to Main screen
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -237,8 +240,6 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
             }
         }
 
-
-//        updateLocationUI();
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
     }
@@ -254,23 +255,66 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
          */
         try {
             if (mLocationPermissionGranted) {
-
-        mFusedLocationProviderClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
                     @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            // Logic to handle location object
-                            Timber.d("mFusedLocationProviderClient location %s", location.getLongitude());
-                            Timber.d("mFusedLocationProviderClient location %s", location.getLatitude());
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            // Set the map's camera position to the current location of the device.
+                            mLastKnownLocation = task.getResult();
+                            Timber.d("mLastKnownLocation %s", mLastKnownLocation.getLatitude());
+                            showCurrentPlace();
+
+                        } else {
+                            Log.d(TAG, "Current location is null. Using defaults.");
+                            Log.e(TAG, "Exception: %s", task.getException());
+
                         }
                     }
                 });
             }
-        } catch (SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    /**
+     * Prompts the user to select the current place from a list of likely places, and shows the
+     * current place on the map - provided the user has granted location permission.
+     */
+    private void showCurrentPlace() {
+        if (mLocationPermissionGranted) {
+            // Get the likely places - that is, the businesses and other points of interest that
+            // are the best match for the device's current location.
+            // Use fields to define the data types to return.
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME);
+
+            // Use the builder to create a FindCurrentPlaceRequest.
+            FindCurrentPlaceRequest request =
+                    FindCurrentPlaceRequest.builder(placeFields).build();
+
+            // Call findCurrentPlace and handle the response (first check that the user has granted permission).
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mPlacesClient.findCurrentPlace(request).addOnSuccessListener(((response) -> {
+                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                        Timber.d("place name %s", placeLikelihood.getPlace().getName());
+                        Timber.d("place has likelyhookd %s", placeLikelihood.getLikelihood());
+
+
+                    }
+                })).addOnFailureListener((exception) -> {
+                    if (exception instanceof ApiException) {
+                        ApiException apiException = (ApiException) exception;
+                        Timber.e( "Place not found: %s", apiException.getStatusCode());
+                    }
+                });
+            } else {
+                // A local method to request required permissions;
+                // See https://developer.android.com/training/permissions/requesting
+                getLocationPermission();
+            }
+        }
+
     }
 
 
@@ -278,89 +322,18 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
     protected void onStart() {
         super.onStart();
 
-        if (googleApiClient != null) {
-            Timber.d("google client connect");
-            googleApiClient.connect();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Timber.d("on resume called");
-        if (!checkPlayServices()) {
-//            locationTv.setText("You need to install Google Play Services to use the App properly");
-            Timber.d("You need to install Google Play Services to use the App properly");
-        }
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        // stop location updates
-        if (googleApiClient != null  &&  googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-        }
     }
-
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST);
-            } else {
-                finish();
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                &&  ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        Timber.d("google services connected");
-
-        // Permissions ok, we get last location
-//        location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
-
-            if (location != null) {
-//            locationTv.setText("Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude());
-                Timber.d("app latitude %s", location.getLatitude());
-            }
-        });
-
-
-        startLocationUpdates();
-    }
-
-
-    private void startLocationUpdates() {
-        locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                &&  ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "You need to enable permissions to display location !", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
 
     // Add Fragments to Tabs
@@ -393,16 +366,6 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-
-    @Override
-    public void onConnectionSuspended(int i) {
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
 
@@ -449,6 +412,13 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
 
     }
 
+    /**
+     * Called when the user touches the button
+     */
+    public void getLocation(View view) {
+        // Do something in response to button click
+        getDeviceLocation();
+    }
 
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -477,13 +447,6 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-    }
-
-    /** Called when the user touches the button */
-    public void getLocation(View view)
-    {
-        // Do something in response to button click
-        getDeviceLocation();
     }
 
 

@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- New MaterialComponents attributes. -->
+        <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
+
     </style>
 
 </resources>

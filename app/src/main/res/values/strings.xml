@@ -22,7 +22,7 @@
     <string name="enable_geofences">Enable Geofences</string>
     <string name="privacy">http://www.google.com/policies/privacy</string>
 
-    <string name="dashbord_screen">Dashboard</string>
+    <string name="dashboard_screen">Dashboard</string>
 
     <!-- Expense placeholder text -->
     <string name="item_title">Palais Garnier</string>
@@ -41,6 +41,7 @@
     <!-- Text input placeholders -->
     <string name="transaction_input_label">Add New Transaction</string>
     <string name="transaction_input_placeholder">Amount</string>
+    <string name="action_geolocate">Pick Place</string>
 
     <!-- Transaction history tools text -->
     <string name="transaction_amount">$5.00</string>

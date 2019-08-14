@@ -35,6 +35,7 @@
     <dimen name="margin_padding_size_large">24dp</dimen>
     <dimen name="margin_padding_size_xlarge">32dp</dimen>
     <dimen name="margin_padding_size_xxlarge">40dp</dimen>
+    <dimen name="margin_padding_sixe_xxxlarge">48dp</dimen>
 
     <!-- Launcher Icon Size, https://developer.android.com/guide/practices/ui_guidelines/icon_design_launcher.html#size -->
     <dimen name="launcher_icon_size">@dimen/standard_touch_size</dimen>
@@ -45,5 +46,11 @@
     <!-- Toolbar, 4 dp baseline, https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-baseline-grids -->
     <dimen name="toolbar_margin_size">4dp</dimen>
     <dimen name="toolbar_icon_size">24dp</dimen>
+
+    <!-- Transaction history dims -->
+    <dimen name="amount_width">100dp</dimen>
+
+    <!-- Transaction bottom sheet -->
+    <dimen name="peek_height">140dp</dimen>
 
 </resources>

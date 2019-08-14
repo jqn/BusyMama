@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/transaction_amount"
-        android:layout_width="90dp"
+        android:layout_width="@dimen/amount_width"
         android:layout_height="wrap_content"
         tools:text="@string/transaction_amount"
         android:textAppearance="?attr/textAppearanceListItem"

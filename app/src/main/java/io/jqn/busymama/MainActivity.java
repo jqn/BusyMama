@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
     // A default location (Sydney, Australia) and default zoom to use when location permission is
     // not granted.
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    // Keys for storing activity state.
+
+    private static final String KEY_LOCATION = "location";
     // Fields for views
     EditText mEditText;
     ListView lstPlaces;
@@ -124,53 +127,21 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-        Timber.d("OnCreate initialized");
 
-        // Add permissions to request location
-        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        // Retrieve location and camera position from saved instance state.
+        if (savedInstanceState != null) {
+            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
 
-        permissionsToRequest = permissionsToRequest(permissions);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (permissionsToRequest.size() > 0) {
-                requestPermissions(permissionsToRequest.
-                        toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
-            }
         }
+
+        // Prompt the user for permission.
+        getLocationPermission();
+
 
         String apiKey = getString(R.string.busymama_api_key);
         // Initialize Places client.
         Places.initialize(getApplicationContext(), apiKey);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-//        Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
-//        locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Location> task) {
-//                if (task.isSuccessful()) {
-//                    // Set the map's camera position to the current location of the device.
-//                    mLastKnownLocation = task.getResult();
-//                    Timber.d("Last known location %s", mLikelyPlaceAddresses);
-//
-//                } else {
-//                    Log.d(TAG, "Current location is null. Using defaults.");
-//                    Log.e(TAG, "Exception: %s", task.getException());
-//                }
-//            }
-//        });
-
-//        mFusedLocationProviderClient.getLastLocation()
-//                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-//                    @Override
-//                    public void onSuccess(Location location) {
-//                        // Got last known location. In some rare situations this can be null.
-//                        if (location != null) {
-//                            // Logic to handle location object
-//                            Timber.d("we have location %s", location);
-//                        }
-//                    }
-//                });
         // Add Toolbar to Main screen
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.dashboard_screen);
@@ -216,27 +187,92 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
         Timber.d("Transactions %s", mDatabase.transactionDao().loadAllTransactions());
     }
 
-    private ArrayList<String> permissionsToRequest(ArrayList<String> wantedPermissions) {
-        ArrayList<String> result = new ArrayList<>();
+    /**
+     * Saves the state of the map when the activity is paused.
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (mMap != null) {
 
-        for (String perm : wantedPermissions) {
-            if (!hasPermission(perm)) {
-                result.add(perm);
+            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
+            super.onSaveInstanceState(outState);
+        }
+    }
+
+    /**
+     * Prompts the user for permission to use the device location.
+     */
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    /**
+     * Handles the result of the request for location permissions.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
             }
         }
 
-        Timber.d("requesting permission %ss", result);
 
-        return result;
+//        updateLocationUI();
+        // Get the current location of the device and set the position of the map.
+        getDeviceLocation();
     }
 
-    private boolean hasPermission(String permission) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
+
+    /**
+     * Gets the current location of the device, and positions the map's camera.
+     */
+    private void getDeviceLocation() {
+        /*
+         * Get the best and most recent location of the device, which may be null in rare
+         * cases when a location is not available.
+         */
+        try {
+            if (mLocationPermissionGranted) {
+
+        mFusedLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            Timber.d("mFusedLocationProviderClient location %s", location.getLongitude());
+                            Timber.d("mFusedLocationProviderClient location %s", location.getLatitude());
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
         }
-
-        return true;
     }
+
 
     @Override
     protected void onStart() {
@@ -264,8 +300,6 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
 
         // stop location updates
         if (googleApiClient != null  &&  googleApiClient.isConnected()) {
-//            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-//            mFusedLocationProviderClient.removeLocationUpdates(googleApiClient, this);
             googleApiClient.disconnect();
         }
     }
@@ -325,8 +359,6 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "You need to enable permissions to display location !", Toast.LENGTH_SHORT).show();
         }
-
-//        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
 
@@ -372,57 +404,6 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
-
-//    @Override
-//    public void onLocationChanged(Location location) {
-//        if (location != null) {
-//            locationTv.setText("Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude());
-//        }
-//    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Timber.d("permissions %s", requestCode);
-        switch(requestCode) {
-            case ALL_PERMISSIONS_RESULT:
-                for (String perm : permissionsToRequest) {
-                    if (!hasPermission(perm)) {
-                        permissionsRejected.add(perm);
-                    }
-                }
-
-                if (permissionsRejected.size() > 0) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
-                            new AlertDialog.Builder(MainActivity.this).
-                                    setMessage("These permissions are mandatory to get your location. You need to allow them.").
-                                    setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                requestPermissions(permissionsRejected.
-                                                        toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
-                                            }
-                                        }
-                                    }).setNegativeButton("Cancel", null).create().show();
-
-
-                            return;
-                        }
-                    }
-
-                } else {
-                    Timber.d("Start google client");
-                    if (googleApiClient != null) {
-                        googleApiClient.connect();
-                    }
-                }
-
-                break;
-        }
-    }
-
 
 
     /**
@@ -496,6 +477,13 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    /** Called when the user touches the button */
+    public void getLocation(View view)
+    {
+        // Do something in response to button click
+        getDeviceLocation();
     }
 
 

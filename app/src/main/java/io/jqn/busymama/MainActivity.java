@@ -18,6 +18,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -246,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
 
 
     /**
-     * Gets the current location of the device, and positions the map's camera.
+     * Gets the current location of the device.
      */
     private void getDeviceLocation() {
         /*
@@ -262,7 +263,11 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
-                            Timber.d("mLastKnownLocation %s", mLastKnownLocation.getLatitude());
+                            Timber.d("mLastKnownLocation %s", mLastKnownLocation);
+                            if (mLastKnownLocation != null) {
+                                Timber.d("mLastKnownLocation %s", mLastKnownLocation.getLatitude());
+                            }
+
                             showCurrentPlace();
 
                         } else {
@@ -284,36 +289,105 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
      */
     private void showCurrentPlace() {
         if (mLocationPermissionGranted) {
+            // Use fields to define the data types to return.
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS,
+                    Place.Field.LAT_LNG);
+
             // Get the likely places - that is, the businesses and other points of interest that
             // are the best match for the device's current location.
-            // Use fields to define the data types to return.
-            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME);
-
-            // Use the builder to create a FindCurrentPlaceRequest.
-            FindCurrentPlaceRequest request =
+            @SuppressWarnings("MissingPermission") final FindCurrentPlaceRequest request =
                     FindCurrentPlaceRequest.builder(placeFields).build();
+            Task<FindCurrentPlaceResponse> placeResponse = mPlacesClient.findCurrentPlace(request);
+            placeResponse.addOnCompleteListener(this,
+                    new OnCompleteListener<FindCurrentPlaceResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
+                            if (task.isSuccessful()) {
+                                FindCurrentPlaceResponse response = task.getResult();
+                                // Set the count, handling cases where less than 5 entries are returned.
+                                int count;
+                                if (response.getPlaceLikelihoods().size() < M_MAX_ENTRIES) {
+                                    count = response.getPlaceLikelihoods().size();
+                                } else {
+                                    count = M_MAX_ENTRIES;
+                                }
 
-            // Call findCurrentPlace and handle the response (first check that the user has granted permission).
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mPlacesClient.findCurrentPlace(request).addOnSuccessListener(((response) -> {
-                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                        Timber.d("place name %s", placeLikelihood.getPlace().getName());
-                        Timber.d("place has likelyhookd %s", placeLikelihood.getLikelihood());
+                                int i = 0;
+                                mLikelyPlaceNames = new String[count];
+                                mLikelyPlaceAddresses = new String[count];
+                                mLikelyPlaceAttributions = new String[count];
+                                mLikelyPlaceLatLngs = new LatLng[count];
+
+                                for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                                    Place currPlace = placeLikelihood.getPlace();
+                                    mLikelyPlaceNames[i] = currPlace.getName();
+                                    mLikelyPlaceAddresses[i] = currPlace.getAddress();
+                                    mLikelyPlaceAttributions[i] = (currPlace.getAttributions() == null) ?
+                                            null : TextUtils.join(" ", currPlace.getAttributions());
+                                    mLikelyPlaceLatLngs[i] = currPlace.getLatLng();
+
+                                    String currLatLng = (mLikelyPlaceLatLngs[i] == null) ?
+                                            "" : mLikelyPlaceLatLngs[i].toString();
+
+                                    Log.i(TAG, String.format("Place " + currPlace.getName()
+                                            + " has likelihood: " + placeLikelihood.getLikelihood()
+                                            + " at " + currLatLng));
+
+                                    i++;
+                                    if (i > (count - 1)) {
+                                        break;
+                                    }
+                                }
+
+                                Timber.d("place fields %s", placeFields);
 
 
-                    }
-                })).addOnFailureListener((exception) -> {
-                    if (exception instanceof ApiException) {
-                        ApiException apiException = (ApiException) exception;
-                        Timber.e( "Place not found: %s", apiException.getStatusCode());
-                    }
-                });
-            } else {
-                // A local method to request required permissions;
-                // See https://developer.android.com/training/permissions/requesting
-                getLocationPermission();
-            }
+                                // COMMENTED OUT UNTIL WE DEFINE THE METHOD
+                                // Populate the ListView
+                                // fillPlacesList();
+                            } else {
+                                Exception exception = task.getException();
+                                if (exception instanceof ApiException) {
+                                    ApiException apiException = (ApiException) exception;
+                                    Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                                }
+                            }
+                        }
+                    });
+        } else {
+            getLocationPermission();
         }
+//        if (mLocationPermissionGranted) {
+//            // Get the likely places - that is, the businesses and other points of interest that
+//            // are the best match for the device's current location.
+//            // Use fields to define the data types to return.
+//            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME);
+//
+//            // Use the builder to create a FindCurrentPlaceRequest.
+//            FindCurrentPlaceRequest request =
+//                    FindCurrentPlaceRequest.builder(placeFields).build();
+//
+//            // Call findCurrentPlace and handle the response (first check that the user has granted permission).
+//            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//                mPlacesClient.findCurrentPlace(request).addOnSuccessListener(((response) -> {
+//                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+//                        Timber.d("place name %s", placeLikelihood.getPlace().getName());
+//                        Timber.d("place has likelyhookd %s", placeLikelihood.getLikelihood());
+//
+//
+//                    }
+//                })).addOnFailureListener((exception) -> {
+//                    if (exception instanceof ApiException) {
+//                        ApiException apiException = (ApiException) exception;
+//                        Timber.e( "Place not found: %s", apiException.getStatusCode());
+//                    }
+//                });
+//            } else {
+//                // A local method to request required permissions;
+//                // See https://developer.android.com/training/permissions/requesting
+//                getLocationPermission();
+//            }
+//        }
 
     }
 

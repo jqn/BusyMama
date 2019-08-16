@@ -25,8 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,27 +35,16 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -75,29 +62,18 @@ import com.google.android.libraries.places.api.Places;
 
 public class MainActivity extends AppCompatActivity implements View.OnKeyListener {
 
-    // Constants
-    public static final String TAG = MainActivity.class.getSimpleName();
-    private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    // Used for selecting the current place.
-    private static final int M_MAX_ENTRIES = 5;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
+
     // integer for permissions results request
-    private static final int ALL_PERMISSIONS_RESULT = 1011;
     private static final String KEY_LOCATION = "location";
-    // Keys for storing activity state.
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
-    // not granted.
-    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+
+    public String current_place = "";
     // Fields for views
     EditText mEditText;
-    ListView lstPlaces;
-    private GoogleMap mMap;
+    TextView mLocation;
+
     // Member variables
     private DrawerLayout mDrawerLayout;
-    private BottomSheetBehavior sheetBehavior;
-    private LinearLayout bottom_sheet;
     private BusyMamaDatabase mDatabase;
 
     // The entry points to the Places API.
@@ -107,18 +83,6 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
     // location retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
     private boolean mLocationPermissionGranted;
-    private String[] mLikelyPlaceNames;
-    private String[] mLikelyPlaceAddresses;
-    private String[] mLikelyPlaceAttributions;
-    private LatLng[] mLikelyPlaceLatLngs;
-    private Location location;
-    private TextView locationTv;
-    private GoogleApiClient googleApiClient;
-    private LocationRequest locationRequest;
-    // lists for permissions
-    private ArrayList<String> permissionsToRequest;
-    private ArrayList<String> permissionsRejected = new ArrayList<>();
-    private ArrayList<String> permissions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,11 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (mMap != null) {
-
-            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
-            super.onSaveInstanceState(outState);
-        }
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -271,15 +231,16 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
                             showCurrentPlace();
 
                         } else {
-                            Log.d(TAG, "Current location is null. Using defaults.");
-                            Log.e(TAG, "Exception: %s", task.getException());
+                            Timber.d("Current location is null. Using defaults.");
+
+                            Timber.e(task.getException(), "Exception:");
 
                         }
                     }
                 });
             }
         } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
+            Timber.e("Exception: %s", e.getMessage());
         }
     }
 
@@ -303,53 +264,52 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
                         @Override
                         public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
                             if (task.isSuccessful()) {
-                                FindCurrentPlaceResponse response = task.getResult();
-                                // Set the count, handling cases where less than 5 entries are returned.
-                                int count;
-                                if (response.getPlaceLikelihoods().size() < M_MAX_ENTRIES) {
-                                    count = response.getPlaceLikelihoods().size();
-                                } else {
-                                    count = M_MAX_ENTRIES;
-                                }
 
-                                int i = 0;
-                                mLikelyPlaceNames = new String[count];
-                                mLikelyPlaceAddresses = new String[count];
-                                mLikelyPlaceAttributions = new String[count];
-                                mLikelyPlaceLatLngs = new LatLng[count];
+                                FindCurrentPlaceResponse response = task.getResult();
+                                double maxLikelihood = 0;
+
+                                Place currentPlace = null;
 
                                 for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                                    Place currPlace = placeLikelihood.getPlace();
-                                    mLikelyPlaceNames[i] = currPlace.getName();
-                                    mLikelyPlaceAddresses[i] = currPlace.getAddress();
-                                    mLikelyPlaceAttributions[i] = (currPlace.getAttributions() == null) ?
-                                            null : TextUtils.join(" ", currPlace.getAttributions());
-                                    mLikelyPlaceLatLngs[i] = currPlace.getLatLng();
-
-                                    String currLatLng = (mLikelyPlaceLatLngs[i] == null) ?
-                                            "" : mLikelyPlaceLatLngs[i].toString();
-
-                                    Log.i(TAG, String.format("Place " + currPlace.getName()
-                                            + " has likelihood: " + placeLikelihood.getLikelihood()
-                                            + " at " + currLatLng));
-
-                                    i++;
-                                    if (i > (count - 1)) {
-                                        break;
+                                                                        if (maxLikelihood < placeLikelihood.getLikelihood()) {
+                                        maxLikelihood = placeLikelihood.getLikelihood();
+                                        currentPlace = placeLikelihood.getPlace();
                                     }
                                 }
 
-                                Timber.d("place fields %s", placeFields);
 
+                                if (currentPlace != null) {
+                                    Timber.d("currentPlace %s", currentPlace.getName());
+                                    // assing current location to place
+                                    current_place = currentPlace.getName();
 
-                                // COMMENTED OUT UNTIL WE DEFINE THE METHOD
-                                // Populate the ListView
-                                // fillPlacesList();
+                                } else {
+                                    current_place = "no location";
+                                }
+
+                                float amount = Float.parseFloat(mEditText.getText().toString());
+                                // assing current location to place
+                                String place = current_place;
+
+                                // Assign current date
+                                Date date = new Date();
+                                Timber.d("date %s", date);
+                                // Clear the text input
+                                mEditText.getText().clear();
+
+                                final TransactionEntry transactionEntry = new TransactionEntry(amount, place, date);
+                                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mDatabase.transactionDao().insertTransaction(transactionEntry);
+                                    }
+                                });
+
                             } else {
                                 Exception exception = task.getException();
                                 if (exception instanceof ApiException) {
                                     ApiException apiException = (ApiException) exception;
-                                    Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                                    Timber.d("Place not found %s", apiException.getStatusCode());
                                 }
                             }
                         }
@@ -357,37 +317,6 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
         } else {
             getLocationPermission();
         }
-//        if (mLocationPermissionGranted) {
-//            // Get the likely places - that is, the businesses and other points of interest that
-//            // are the best match for the device's current location.
-//            // Use fields to define the data types to return.
-//            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME);
-//
-//            // Use the builder to create a FindCurrentPlaceRequest.
-//            FindCurrentPlaceRequest request =
-//                    FindCurrentPlaceRequest.builder(placeFields).build();
-//
-//            // Call findCurrentPlace and handle the response (first check that the user has granted permission).
-//            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//                mPlacesClient.findCurrentPlace(request).addOnSuccessListener(((response) -> {
-//                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-//                        Timber.d("place name %s", placeLikelihood.getPlace().getName());
-//                        Timber.d("place has likelyhookd %s", placeLikelihood.getLikelihood());
-//
-//
-//                    }
-//                })).addOnFailureListener((exception) -> {
-//                    if (exception instanceof ApiException) {
-//                        ApiException apiException = (ApiException) exception;
-//                        Timber.e( "Place not found: %s", apiException.getStatusCode());
-//                    }
-//                });
-//            } else {
-//                // A local method to request required permissions;
-//                // See https://developer.android.com/training/permissions/requesting
-//                getLocationPermission();
-//            }
-//        }
 
     }
 
@@ -461,22 +390,8 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
                 Toast toast = Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_LONG);
                 toast.show();
             } else {
-                float amount = Float.parseFloat(mEditText.getText().toString());
-                // assing current location to place
-                String place = "King soopers";
-                // Assign current date
-                Date date = new Date();
-                Timber.d("date %s", date);
-                // Clear the text input
-                mEditText.getText().clear();
+                showCurrentPlace();
 
-                final TransactionEntry transactionEntry = new TransactionEntry(amount, place, date);
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        mDatabase.transactionDao().insertTransaction(transactionEntry);
-                    }
-                });
             }
 
 

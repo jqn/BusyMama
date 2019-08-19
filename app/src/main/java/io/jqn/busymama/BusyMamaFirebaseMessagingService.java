@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -27,17 +29,17 @@ public class BusyMamaFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         // Handle FCM messages here.
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+//        Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+//            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
         }
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+//            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
         // [END receive_message]
 
@@ -52,7 +54,7 @@ public class BusyMamaFirebaseMessagingService extends FirebaseMessagingService {
      */
     @Override
     public void onNewToken(String token) {
-        Log.d(TAG, "Refreshed token: " + token);
+//        Log.d(TAG, "Refreshed token: " + token);
 
         sendRegistrationToServer(token);
     }
@@ -103,5 +105,18 @@ public class BusyMamaFirebaseMessagingService extends FirebaseMessagingService {
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
+    }
+
+    public static class TransactionDetailActivity extends AppCompatActivity {
+        public static final String EXTRA_POSITION = "position";
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+//            setContentView(R.layout.activity_expense_detail);
+
+    //        int postion = getIntent().getIntExtra(EXTRA_POSITION, 0);
+
+        }
     }
 }

@@ -9,7 +9,8 @@
     android:padding="@dimen/margin_padding_size_small"
     app:behavior_hideable="false"
     app:behavior_peekHeight="@dimen/peek_height"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    android:focusableInTouchMode="true">
 
 
     <TextView
@@ -37,24 +38,5 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--<TextView-->
-        <!--android:id="@+id/location_tag"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:textAlignment="center"-->
-        <!--android:textAppearance="@android:style/TextAppearance.Material.Caption"-->
-        <!--android:textColor="@color/colorPrimary" />-->
-
-
-    <!--<com.google.android.material.button.MaterialButton-->
-        <!--android:id="@+id/material_button"-->
-        <!--style="@style/Widget.MaterialComponents.Button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/action_geolocate"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:onClick="getLocation"-->
-        <!--app:icon="@drawable/ic_geolocate_black_24dp"-->
-        <!--/>-->
 
 </LinearLayout>

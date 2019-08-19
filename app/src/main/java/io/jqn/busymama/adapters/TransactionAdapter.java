@@ -27,7 +27,7 @@ import timber.log.Timber;
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
 
     // Constant for date format
-    private static final String DATE_FORMAT = "dd/MM/yyy hh:mm:ss a";
+    private static final String DATE_FORMAT = "MM/dd/yyy hh:mm:ss a";
 
     // Member variable to handle item clicks
     final private ItemClickListener mItemClickListener;
@@ -87,7 +87,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.amountView.setText(transaction_amount);
         holder.transactionDescriptionView.setText(updatedAt);
         holder.updatedAtView.setText(place);
-
 
     }
 

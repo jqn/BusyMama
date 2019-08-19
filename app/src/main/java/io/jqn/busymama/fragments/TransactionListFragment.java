@@ -1,7 +1,11 @@
 package io.jqn.busymama.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -9,14 +13,10 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import java.util.List;
 
-import io.jqn.busymama.AppExecutors;
 import io.jqn.busymama.R;
+import io.jqn.busymama.TransactionDetailActivity;
 import io.jqn.busymama.adapters.TransactionAdapter;
 import io.jqn.busymama.database.BusyMamaDatabase;
 import io.jqn.busymama.database.TransactionEntry;
@@ -30,8 +30,6 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
 
     // Database member variable
     private TransactionAdapter mAdapter;
-
-    private TransactionAdapter transactionAdapter;
 
     public TransactionListFragment() {
         // Required empty public constructor
@@ -71,7 +69,10 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
 
     @Override
     public void onItemClickListener(int itemId) {
-        // Launch AddTransactionActivity adding the itemId as an extra in the intent
+        // Launch TransactionDetail adding the itemId as an extra in the intent
+        Intent intent = new Intent(getActivity(), TransactionDetailActivity.class);
+        intent.putExtra(TransactionDetailActivity.EXTRA_TRANSACTION_ID, itemId);
+        startActivity(intent);
     }
 
     public void retrieveTransactions() {

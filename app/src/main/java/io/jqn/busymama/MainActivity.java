@@ -1,34 +1,24 @@
 package io.jqn.busymama;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import android.Manifest;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -40,6 +30,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
@@ -58,8 +49,6 @@ import io.jqn.busymama.database.TransactionEntry;
 import io.jqn.busymama.fragments.TransactionListFragment;
 import timber.log.Timber;
 
-import com.google.android.libraries.places.api.Places;
-
 public class MainActivity extends AppCompatActivity implements View.OnKeyListener {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -70,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
     public String current_place = "";
     // Fields for views
     EditText mEditText;
-    TextView mLocation;
 
     // Member variables
     private DrawerLayout mDrawerLayout;
@@ -271,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
                                 Place currentPlace = null;
 
                                 for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                                                                        if (maxLikelihood < placeLikelihood.getLikelihood()) {
+                                    if (maxLikelihood < placeLikelihood.getLikelihood()) {
                                         maxLikelihood = placeLikelihood.getLikelihood();
                                         currentPlace = placeLikelihood.getPlace();
                                     }
@@ -380,6 +368,7 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
     public boolean onKey(View v, int keyCode, KeyEvent event) {
 
         Timber.d("event %s", event);
+
         // If the event is a key-down event on the "enter" button
         if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                 (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -401,13 +390,6 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
 
     }
 
-    /**
-     * Called when the user touches the button
-     */
-    public void getLocation(View view) {
-        // Do something in response to button click
-        getDeviceLocation();
-    }
 
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();

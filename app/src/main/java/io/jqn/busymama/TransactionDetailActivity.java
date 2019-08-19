@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -45,6 +47,8 @@ public class TransactionDetailActivity extends AppCompatActivity {
 
         setSupportActionBar((Toolbar) findViewById(R.id.transaction_detail_toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //
         // Set collapsiong toolbar layout to the screen
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.transaction_detail_collapsing_toolbar);
         // Set title of Detail page
@@ -64,12 +68,13 @@ public class TransactionDetailActivity extends AppCompatActivity {
                 mTransactionId = intent.getIntExtra(EXTRA_TRANSACTION_ID, DEFAULT_TRANSACTION_ID);
 
                 Timber.d("Actively retrieving a specific transaction from the DataBase");
-                // Populate the UI
-                final LiveData<TransactionEntry> transaction = mDb.transactionDao().loadTransactionById(mTransactionId);
-                transaction.observe(this, new Observer<TransactionEntry>() {
+                TransactionDetailViewModelFactory factory = new TransactionDetailViewModelFactory(mDb, mTransactionId);
+                final TransactionDetailViewModel viewModel = ViewModelProviders.of(this, factory).get(TransactionDetailViewModel.class);
+
+                viewModel.getTransaction().observe(this, new Observer<TransactionEntry>() {
                     @Override
-                    public void onChanged(@Nullable TransactionEntry transactionEntry) {
-                        transaction.removeObserver(this);
+                    public void onChanged(TransactionEntry transactionEntry) {
+                        viewModel.getTransaction().removeObserver(this);
                         Timber.d("Receiving database update from LiveData");
                         populateUI(transactionEntry);
                     }
@@ -85,6 +90,36 @@ public class TransactionDetailActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            Timber.d("onRestoreInstanceState transaction %s", savedInstanceState.getInt(INSTANCE_TRANSACTION_ID));
+
+
+            mTransactionId = savedInstanceState.getInt(EXTRA_TRANSACTION_ID);
+
+            Timber.d("Actively retrieving a specific transaction from the DataBase");
+            TransactionDetailViewModelFactory factory = new TransactionDetailViewModelFactory(mDb, mTransactionId);
+            final TransactionDetailViewModel viewModel = ViewModelProviders.of(this, factory).get(TransactionDetailViewModel.class);
+
+            viewModel.getTransaction().observe(this, new Observer<TransactionEntry>() {
+                @Override
+                public void onChanged(TransactionEntry transactionEntry) {
+                    viewModel.getTransaction().removeObserver(this);
+                    Timber.d("Receiving database update from LiveData");
+                    populateUI(transactionEntry);
+                }
+            });
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
     /**
      * populateUI would be called to populate the UI when in update mode

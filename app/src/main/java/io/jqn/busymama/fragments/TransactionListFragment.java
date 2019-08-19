@@ -10,11 +10,14 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import io.jqn.busymama.MainViewModel;
 import io.jqn.busymama.R;
 import io.jqn.busymama.TransactionDetailActivity;
 import io.jqn.busymama.adapters.TransactionAdapter;
@@ -77,14 +80,15 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
 
     public void retrieveTransactions() {
 
-        final LiveData<List<TransactionEntry>> transactions = BusyMamaDatabase.getInstance(getContext()).transactionDao().loadAllTransactions();
-        transactions.observe(this, new Observer<List<TransactionEntry>>() {
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        viewModel.getTransactions().observe(this, new Observer<List<TransactionEntry>>() {
             @Override
             public void onChanged(List<TransactionEntry> transactionEntries) {
-                Timber.d("We have transactions");
                 mAdapter.setTransactions(transactionEntries);
             }
         });
+
 
     }
 

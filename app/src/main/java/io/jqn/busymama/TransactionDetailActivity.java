@@ -4,15 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
-
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.text.NumberFormat;
 import java.util.Currency;
@@ -45,14 +40,10 @@ public class TransactionDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_detail);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.transaction_detail_toolbar));
+        Toolbar toolbar = findViewById(R.id.transaction_detail_toolbar);
+        toolbar.setTitle(getString(R.string.transaction_detail_screen_title));
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //
-        // Set collapsiong toolbar layout to the screen
-        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.transaction_detail_collapsing_toolbar);
-        // Set title of Detail page
-        collapsingToolbar.setTitle(getString(R.string.transaction_detail_screen_title));
 
         mDb = BusyMamaDatabase.getInstance(getApplicationContext());
 
@@ -96,8 +87,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             Timber.d("onRestoreInstanceState transaction %s", savedInstanceState.getInt(INSTANCE_TRANSACTION_ID));
-
-
+            
             mTransactionId = savedInstanceState.getInt(EXTRA_TRANSACTION_ID);
 
             Timber.d("Actively retrieving a specific transaction from the DataBase");

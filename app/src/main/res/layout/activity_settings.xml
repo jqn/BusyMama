@@ -7,8 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="24dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="@dimen/md_keylines"
+        android:layout_marginRight="@dimen/md_keylines"
         android:orientation="vertical">
 
         <TextView
@@ -36,7 +36,7 @@
                 android:paddingBottom="4dp"
                 android:paddingRight="8dp"
                 android:paddingTop="4dp"
-                android:src="@drawable/ic_local_grocery_store_black_24dp" />
+                android:src="@drawable/ic_public_black_24dp" />
 
             <Switch
                 android:id="@+id/enable_switch"
@@ -58,7 +58,7 @@
                 android:paddingBottom="4dp"
                 android:paddingRight="8dp"
                 android:paddingTop="4dp"
-                android:src="@drawable/ic_local_grocery_store_black_24dp" />
+                android:src="@drawable/ic_geolocate_black_24dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -85,6 +85,7 @@
 
 
         <Button
+            android:id="@+id/add_location_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"

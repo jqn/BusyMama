@@ -8,9 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +19,6 @@ import io.jqn.busymama.MainViewModel;
 import io.jqn.busymama.R;
 import io.jqn.busymama.TransactionDetailActivity;
 import io.jqn.busymama.adapters.TransactionAdapter;
-import io.jqn.busymama.database.BusyMamaDatabase;
 import io.jqn.busymama.database.TransactionEntry;
 import timber.log.Timber;
 

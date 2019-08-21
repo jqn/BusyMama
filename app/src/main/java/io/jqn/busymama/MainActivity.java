@@ -46,6 +46,8 @@ import java.util.List;
 
 import io.jqn.busymama.database.BusyMamaDatabase;
 import io.jqn.busymama.database.TransactionEntry;
+import io.jqn.busymama.fragments.MyPlacesFragment;
+import io.jqn.busymama.fragments.SettingsFragment;
 import io.jqn.busymama.fragments.TransactionListFragment;
 import timber.log.Timber;
 
@@ -209,14 +211,12 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
-                            // Set the map's camera position to the current location of the device.
+
                             mLastKnownLocation = task.getResult();
                             Timber.d("mLastKnownLocation %s", mLastKnownLocation);
                             if (mLastKnownLocation != null) {
                                 Timber.d("mLastKnownLocation %s", mLastKnownLocation.getLatitude());
                             }
-
-                            showCurrentPlace();
 
                         } else {
                             Timber.d("Current location is null. Using defaults.");
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
     private void showCurrentPlace() {
         if (mLocationPermissionGranted) {
             // Use fields to define the data types to return.
-            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS,
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
                     Place.Field.LAT_LNG);
 
             // Get the likely places - that is, the businesses and other points of interest that
@@ -268,12 +268,13 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
 
                                 if (currentPlace != null) {
                                     Timber.d("currentPlace %s", currentPlace.getName());
-                                    // assing current location to place
+                                    // passing current location to place
                                     current_place = currentPlace.getName();
 
                                 } else {
                                     current_place = "no location";
                                 }
+                                // This crashes the app because mEditText is empty
 
                                 float amount = Float.parseFloat(mEditText.getText().toString());
                                 // assing current location to place

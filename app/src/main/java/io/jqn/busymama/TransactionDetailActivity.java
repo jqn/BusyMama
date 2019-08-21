@@ -87,7 +87,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             Timber.d("onRestoreInstanceState transaction %s", savedInstanceState.getInt(INSTANCE_TRANSACTION_ID));
-            
+
             mTransactionId = savedInstanceState.getInt(EXTRA_TRANSACTION_ID);
 
             Timber.d("Actively retrieving a specific transaction from the DataBase");

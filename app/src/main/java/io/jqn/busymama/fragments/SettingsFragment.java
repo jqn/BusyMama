@@ -26,9 +26,13 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
+import io.jqn.busymama.AppExecutors;
 import io.jqn.busymama.R;
+import io.jqn.busymama.database.BusyMamaDatabase;
+import io.jqn.busymama.database.MyPlacesEntry;
 import timber.log.Timber;
 
 
@@ -37,11 +41,15 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
     // Used for selecting the current place.
     private static final int MAX_ENTRIES = 20;
-    Context context;
     // Used for selecting the current place.
+    private String[] mPlaceIds;
     private String[] mLikelyPlaceNames;
+    private String[] mLikelyPlaceAddresses;
     // The entry points to the Places API.
     private PlacesClient mPlacesClient;
+
+    // Member Variables
+    private BusyMamaDatabase mDatabase;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -59,6 +67,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         Places.initialize(getContext().getApplicationContext(), apiKey);
         // Create a new Places client instance.
         mPlacesClient = Places.createClient(getContext());
+        //  Initialize member variable for the database
+        mDatabase = BusyMamaDatabase.getInstance(getContext());
 
     }
 
@@ -92,7 +102,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         }
         // Call findCurrentPlace and handle the response
         // Use fields to define the data types to return.
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
         // Use the builder to create a FindCurrentPlaceRequest.
         // Get the likely places - that is, the businesses and other points of interest that
         // are the best match for the device's current location.
@@ -119,11 +129,18 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                             }
 
                             int i = 0;
+                            mPlaceIds = new String[count];
                             mLikelyPlaceNames = new String[count];
+                            mLikelyPlaceAddresses = new String[count];
 
                             for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                                Place currPlace = placeLikelihood.getPlace();
-                                mLikelyPlaceNames[i] = currPlace.getName();
+                                // Build a list of likely places to show the user.
+                                Place currentPlace = placeLikelihood.getPlace();
+
+                                mPlaceIds[i] = currentPlace.getId();
+                                mLikelyPlaceNames[i] = currentPlace.getName();
+                                mLikelyPlaceAddresses[i] = currentPlace.getAddress();
+
                                 Timber.d("likelyPlaces %s", placeLikelihood.getPlace().getName());
 
                                 i++;
@@ -146,7 +163,21 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Timber.d("place clicked %s", which);
+                Timber.d("likely place name %s", mLikelyPlaceNames[which]);
+                String placeID = mPlaceIds[which];
+                String placeName = mLikelyPlaceNames[which];
+                String placeAddress = mLikelyPlaceAddresses[which];
+
+                // Assign current date
+                Date date = new Date();
+
+                final MyPlacesEntry myPlacesEntry = new MyPlacesEntry(placeID, placeName, placeAddress, date );
+                AppExecutors.getInstance().diskIO().execute((new Runnable() {
+                    @Override
+                    public void run() {
+                        mDatabase.myPlacesDao().insertMyPlace(myPlacesEntry);
+                    }
+                }));
             }
         };
 

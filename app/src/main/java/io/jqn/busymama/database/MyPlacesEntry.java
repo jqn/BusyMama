@@ -11,7 +11,7 @@ import java.util.Date;
 public class MyPlacesEntry {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int placeId;
+    private String  placeId;
     private String placeName;
     private String placeAddress;
 
@@ -19,14 +19,14 @@ public class MyPlacesEntry {
     private Date updatedAt;
 
     @Ignore
-    public MyPlacesEntry(int placeId, String placeName, String placeAddress, Date updatedAt) {
+    public MyPlacesEntry(String placeId, String placeName, String placeAddress, Date updatedAt) {
         this.placeId = placeId;
         this.placeName = placeName;
         this.placeAddress = placeAddress;
         this.updatedAt = updatedAt;
     }
 
-    public MyPlacesEntry(int id, int placeId, String placeName, String placeAddress, Date updatedAt) {
+    public MyPlacesEntry(int id, String placeId, String placeName, String placeAddress, Date updatedAt) {
         this.id = id;
         this.placeId = placeId;
         this.placeName = placeName;
@@ -42,11 +42,11 @@ public class MyPlacesEntry {
         this.id = id;
     }
 
-    public int getPlaceId() {
+    public String getPlaceId() {
         return placeId;
     }
 
-    public void setPlaceId(int placeId) {
+    public void setPlaceId(String placeId) {
         this.placeId = placeId;
     }
 

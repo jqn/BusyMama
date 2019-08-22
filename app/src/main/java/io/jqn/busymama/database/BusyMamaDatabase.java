@@ -9,12 +9,13 @@ import androidx.room.TypeConverters;
 
 import timber.log.Timber;
 
-@Database(entities = {TransactionEntry.class}, version = 2, exportSchema = false)
+@Database(entities = {TransactionEntry.class, MyPlacesEntry.class}, version = 3, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class BusyMamaDatabase extends RoomDatabase {
 
     private static final Object LOCK = new Object();
     private static final String DATABASE_NAME = "transactionlist";
+
     private static BusyMamaDatabase sInstance;
 
     public static BusyMamaDatabase getInstance(Context context) {
@@ -34,5 +35,6 @@ public abstract class BusyMamaDatabase extends RoomDatabase {
     }
 
     public abstract TransactionDao transactionDao();
+    public abstract MyPlacesDao myPlacesDao();
 
 }

@@ -18,7 +18,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".TransactionDetailActivity"></activity>
         <activity android:name=".BusyMamaFirebaseMessagingService$TransactionDetailActivity" />
-        <activity android:name=".SettingsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -34,6 +34,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     private Context mContext;
     // Date formatter
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
+    private TextView mEmptyPlacehoder;
 
     /**
      * Constructor for the TransactionAdapter that initializes the Context.
@@ -55,7 +56,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public TransactionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Inflate the transaction_layout to a view
         View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.transaction_list, parent, false);
+                .inflate(R.layout.item_list, parent, false);
+
+        if (mTransactionEntries.isEmpty()) {
+            view.setVisibility(View.GONE);
+            mEmptyPlacehoder.setVisibility(View.VISIBLE);
+
+        } else {
+            view.setVisibility(View.VISIBLE);
+            mEmptyPlacehoder.setVisibility(View.GONE);
+        }
 
         return new TransactionViewHolder(view);
     }

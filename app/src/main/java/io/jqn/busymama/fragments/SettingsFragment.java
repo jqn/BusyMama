@@ -52,7 +52,6 @@ import timber.log.Timber;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener, OnCompleteListener<Void> {
     // Constants
-    private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     // Used for selecting the current place.
     private static final int MAX_ENTRIES = 20;
@@ -61,7 +60,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
      */
     private GeofencingClient mGeofencingClient;
 
-    /**
+    /**`
      * The list of geofences used in this sample.
      */
     private ArrayList<Geofence> mGeofenceList;
@@ -70,10 +69,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
      * Used when requesting to add or remove geofences.
      */
     private PendingIntent mGeofencePendingIntent;
-
-    // Buttons for kicking off the process of adding or removing geofences.
-    private Button mAddGeofencesButton;
-    private Button mRemoveGeofencesButton;
 
     private PendingGeofenceTask mPendingGeofenceTask = PendingGeofenceTask.NONE;
     // Used for selecting the current place.
@@ -137,7 +132,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
             }
         });
 
-//        populateGeofenceList();
         return view;
     }
 
@@ -244,11 +238,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         mPendingGeofenceTask = PendingGeofenceTask.NONE;
         if (task.isSuccessful()) {
             updateGeofencesAdded(!getGeofencesAdded());
-//            setButtonsEnabledState();
 
             int messageId = getGeofencesAdded() ? R.string.geofences_added :
                     R.string.geofences_removed;
-            Toast.makeText(getActivity(), getString(messageId), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(messageId), Toast.LENGTH_LONG).show();
         } else {
             // Get the status code for the error and log it using a user-friendly message.
             String errorMessage = GeofenceErrorMessages.getErrorString(getActivity(), task.getException());
@@ -491,30 +484,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 Timber.i("Permission denied");
                 // Permission denied.
 
-                // Notify the user via a SnackBar that they have rejected a core permission for the
-                // app, which makes the Activity useless. In a real app, core permissions would
-                // typically be best requested during a welcome-screen flow.
+                Toast.makeText(getContext(), getString(R.string.permission_denied_explanation), Toast.LENGTH_LONG).show();
 
-                // Additionally, it is important to remember that a permission might have been
-                // rejected without asking the user for permission (device policy or "Never ask
-                // again" prompts). Therefore, a user interface affordance is typically implemented
-                // when permissions are denied. Otherwise, your app could appear unresponsive to
-                // touches or interactions which have required permissions.
-//                showSnackbar(R.string.permission_denied_explanation, R.string.settings,
-//                        new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                // Build intent that displays the App settings screen.
-//                                Intent intent = new Intent();
-//                                intent.setAction(
-//                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//                                Uri uri = Uri.fromParts("package",
-//                                        BuildConfig.APPLICATION_ID, null);
-//                                intent.setData(uri);
-//                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                startActivity(intent);
-//                            }
-//                        });
                 mPendingGeofenceTask = PendingGeofenceTask.NONE;
             }
         }

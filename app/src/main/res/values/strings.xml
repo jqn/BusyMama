@@ -29,6 +29,7 @@
     <string name="item_description">2670 Broadway, Boulder, CO 80304, USA.
     </string>
     <string name="item_date">08/229/2019 07:37:59 PM</string>
+    <string name="item_empty">Add some transactions to get started!</string>
 
     <!-- Text input placeholders -->
     <string name="transaction_input_label">Add New Transaction</string>

@@ -15,7 +15,7 @@ public interface MyPlacesDao {
     @Query("SELECT * FROM `myplaces` ORDER BY id")
     LiveData<List<MyPlacesEntry>> loadAllPlaces();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMyPlace(MyPlacesEntry myPlacesEntry);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

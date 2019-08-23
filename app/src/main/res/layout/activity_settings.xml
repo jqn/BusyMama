@@ -9,15 +9,9 @@
         android:layout_marginBottom="24dp"
         android:layout_marginLeft="@dimen/md_keylines"
         android:layout_marginRight="@dimen/md_keylines"
+        android:layout_marginTop="@dimen/margin_padding_size_large"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/settings_label"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorPrimaryDark" />
 
         <View
             android:layout_width="fill_parent"
@@ -28,6 +22,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_padding_size_small"
             android:orientation="horizontal">
 
             <ImageView
@@ -47,42 +42,6 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:paddingRight="8dp"
-                android:paddingTop="4dp"
-                android:src="@drawable/ic_geolocate_black_24dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/location_permissions"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@android:color/black" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <CheckBox
-                    android:id="@+id/location_permission_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="8dp"
-                    android:onClick="onLocationPermissionClicked" />
-
-            </RelativeLayout>
-        </LinearLayout>
-
 
         <Button
             android:id="@+id/add_location_button"
@@ -90,18 +49,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:background="@color/colorPrimary"
+            android:layout_marginBottom="@dimen/margin_padding_size_large"
             android:onClick="onAddPlaceButtonClicked"
             android:text="@string/add_new_location"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textColor="@android:color/white" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/location_list"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorPrimaryDark" />
 
         <View
             android:layout_width="fill_parent"
@@ -123,13 +76,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="4dp"
-            android:src="@drawable/powered_by_google_light" />
+            android:src="@drawable/ic_geolocation_primary" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="web"
             android:paddingBottom="4dp"
+            android:layout_marginBottom="@dimen/margin_padding_size_medium"
             android:text="@string/privacy"
             android:textAlignment="center" />
     </LinearLayout>

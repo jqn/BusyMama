@@ -40,19 +40,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import butterknife.ButterKnife;
 import io.jqn.busymama.AppExecutors;
+import io.jqn.busymama.Constants;
 import io.jqn.busymama.GeofenceBroadcastReceiver;
 import io.jqn.busymama.GeofenceErrorMessages;
-import io.jqn.busymama.MainActivity;
 import io.jqn.busymama.R;
 import io.jqn.busymama.database.BusyMamaDatabase;
 import io.jqn.busymama.database.MyPlacesEntry;
 import timber.log.Timber;
-
-import io.jqn.busymama.Constants;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener, OnCompleteListener<Void> {
     // Constants
@@ -84,6 +80,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     private String[] mPlaceIds;
     private String[] mLikelyPlaceNames;
     private String[] mLikelyPlaceAddresses;
+    private LatLng[] mLikelyPlaceLatLngs;
     // The entry points to the Places API.
     private PlacesClient mPlacesClient;
     // Member Variables
@@ -137,12 +134,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 mIsEnabled = isChecked;
                 editor.commit();
 
-                if (isChecked) addGeofences();
-                else removeGeofences();
             }
         });
 
-        populateGeofenceList();
+//        populateGeofenceList();
         return view;
     }
 
@@ -285,33 +280,33 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
      * This sample hard codes geofence data. A real app might dynamically create geofences based on
      * the user's location.
      */
-    private void populateGeofenceList() {
-        for (Map.Entry<String, LatLng> entry : Constants.BAY_AREA_LANDMARKS.entrySet()) {
+    private void populateGeofenceList(String id, LatLng coords) {
+        Timber.d("Geolocation place id %s", id);
+        Timber.d("Geolocation latitude %s", coords);
 
-            mGeofenceList.add(new Geofence.Builder()
-                    // Set the request ID of the geofence. This is a string to identify this
-                    // geofence.
-                    .setRequestId(entry.getKey())
+        mGeofenceList.add(new Geofence.Builder()
+                // Set the request ID of the geofence. This is a string to identify this
+                // geofence.
+                .setRequestId(id)
 
-                    // Set the circular region of this geofence.
-                    .setCircularRegion(
-                            entry.getValue().latitude,
-                            entry.getValue().longitude,
-                            Constants.GEOFENCE_RADIUS_IN_METERS
-                    )
+                // Set the circular region of this geofence.
+                .setCircularRegion(
+                        coords.latitude,
+                        coords.longitude,
+                        Constants.GEOFENCE_RADIUS_IN_METERS
+                )
 
-                    // Set the expiration duration of the geofence. This geofence gets automatically
-                    // removed after this period of time.
-                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                // Set the expiration duration of the geofence. This geofence gets automatically
+                // removed after this period of time.
+                .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
 
-                    // Set the transition types of interest. Alerts are only generated for these
-                    // transition. We track entry and exit transitions in this sample.
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                            Geofence.GEOFENCE_TRANSITION_EXIT)
+                // Set the transition types of interest. Alerts are only generated for these
+                // transition. We track entry and exit transitions in this sample.
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                        Geofence.GEOFENCE_TRANSITION_EXIT)
 
-                    // Create the geofence.
-                    .build());
-        }
+                // Create the geofence.
+                .build());
 
     }
 
@@ -360,7 +355,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         }
         // Call findCurrentPlace and handle the response
         // Use fields to define the data types to return.
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
         // Use the builder to create a FindCurrentPlaceRequest.
         // Get the likely places - that is, the businesses and other points of interest that
         // are the best match for the device's current location.
@@ -390,6 +385,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                             mPlaceIds = new String[count];
                             mLikelyPlaceNames = new String[count];
                             mLikelyPlaceAddresses = new String[count];
+                            mLikelyPlaceLatLngs = new LatLng[count];
 
                             for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
                                 // Build a list of likely places to show the user.
@@ -398,6 +394,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                                 mPlaceIds[i] = currentPlace.getId();
                                 mLikelyPlaceNames[i] = currentPlace.getName();
                                 mLikelyPlaceAddresses[i] = currentPlace.getAddress();
+                                mLikelyPlaceLatLngs[i] = currentPlace.getLatLng();
+
+                                Timber.d("On Complete find %s", placeLikelihood.getPlace());
 
                                 Timber.d("likelyPlaces %s", placeLikelihood.getPlace().getName());
 
@@ -406,8 +405,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                                     break;
                                 }
                             }
+                            openPlacesDialog();
+                        } else {
+                            Timber.e("Exeption %s", task.getException());
+                            Toast.makeText(getContext(), getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
                         }
-                        openPlacesDialog();
+
                     }
                 });
     }
@@ -421,13 +424,15 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Timber.d("likely place name %s", mLikelyPlaceNames[which]);
+                Timber.d("openPlacesDialog latlngs %s", mLikelyPlaceLatLngs[which]);
                 String placeID = mPlaceIds[which];
                 String placeName = mLikelyPlaceNames[which];
                 String placeAddress = mLikelyPlaceAddresses[which];
+                LatLng placeLatLng = mLikelyPlaceLatLngs[which];
 
                 // Assign current date
                 Date date = new Date();
-
+                // Insert new place into DB
                 final MyPlacesEntry myPlacesEntry = new MyPlacesEntry(placeID, placeName, placeAddress, date);
                 AppExecutors.getInstance().diskIO().execute((new Runnable() {
                     @Override
@@ -435,6 +440,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                         mDatabase.myPlacesDao().insertMyPlace(myPlacesEntry);
                     }
                 }));
+                if (mIsEnabled) populateGeofenceList(mPlaceIds[which], mLikelyPlaceLatLngs[which]);
+
             }
         };
 

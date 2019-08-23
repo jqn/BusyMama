@@ -59,6 +59,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
                 mTransactionId = intent.getIntExtra(EXTRA_TRANSACTION_ID, DEFAULT_TRANSACTION_ID);
 
                 Timber.d("Actively retrieving a specific transaction from the DataBase");
+
                 TransactionDetailViewModelFactory factory = new TransactionDetailViewModelFactory(mDb, mTransactionId);
                 final TransactionDetailViewModel viewModel = ViewModelProviders.of(this, factory).get(TransactionDetailViewModel.class);
 

@@ -1,14 +1,12 @@
 package io.jqn.busymama.adapters;
 
 import android.content.Context;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -72,7 +70,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public void onBindViewHolder(TransactionViewHolder holder, int position) {
         // Determine the values of the wanted data
         TransactionEntry transactionEntry = mTransactionEntries.get(position);
+
         float amount = transactionEntry.getAmount();
+
         // Format the transaction amounts
         NumberFormat format = NumberFormat.getCurrencyInstance();
         format.setMaximumFractionDigits(2);

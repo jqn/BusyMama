@@ -25,10 +25,10 @@
     <string name="dashboard_screen">Dashboard</string>
 
     <!-- Expense placeholder text -->
-    <string name="item_title">Palais Garnier</string>
-    <string name="item_desc">The Palais Garnier which locates in Paris was built from 1861 for
-        the Paris Opera.
+    <string name="item_title">Whole Foods</string>
+    <string name="item_description">2670 Broadway, Boulder, CO 80304, USA.
     </string>
+    <string name="item_date">08/229/2019 07:37:59 PM</string>
 
     <!-- Text input placeholders -->
     <string name="transaction_input_label">Add New Transaction</string>

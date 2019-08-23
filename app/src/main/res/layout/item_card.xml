@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginBottom="@dimen/md_keylines"
+    android:layout_marginLeft="@dimen/md_keylines"
+    android:layout_marginRight="@dimen/md_keylines"
+    android:foreground="?attr/selectableItemBackground"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/card_image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_image_height"
+            android:scaleType="centerCrop"
+            android:src="@drawable/fruits_veggies"
+            tools:src="@drawable/fruits_veggies" />
+
+        <TextView
+            android:id="@+id/card_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_title_height"
+            android:layout_marginLeft="@dimen/md_keylines"
+            android:layout_alignBottom="@+id/card_image"
+            tools:text="@string/item_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/card_subhead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_title"
+            android:layout_marginLeft="@dimen/md_keylines"
+            android:layout_marginTop="@dimen/md_keylines"
+            android:layout_marginBottom="@dimen/md_keylines"
+            android:layout_marginRight="@dimen/md_keylines"
+            tools:text="@string/item_description"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/article_subheading" />
+
+        <TextView
+            android:id="@+id/card_supporting_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_subhead"
+            android:layout_marginLeft="@dimen/md_keylines"
+            android:layout_marginTop="@dimen/md_keylines"
+            android:layout_marginBottom="@dimen/md_keylines"
+            android:layout_marginRight="@dimen/md_keylines"
+            tools:text="@string/item_description"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/article_subheading" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

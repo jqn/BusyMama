@@ -28,7 +28,7 @@ import timber.log.Timber;
 public class TransactionListFragment extends Fragment implements TransactionAdapter.ItemClickListener {
     private Context mContext;
 
-    // Database member variable
+    // Member variables
     private TransactionAdapter mAdapter;
 
     public TransactionListFragment() {

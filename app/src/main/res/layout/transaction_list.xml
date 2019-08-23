@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/md_keylines"
         android:layout_toRightOf="@+id/transaction_amount"
-        tools:text="@string/transaction_detail"
+        tools:text="@string/item_date"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textSize="@dimen/article_subheading" />
 

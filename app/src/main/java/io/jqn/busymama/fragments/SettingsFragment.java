@@ -26,6 +26,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -39,7 +40,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import butterknife.ButterKnife;
 import io.jqn.busymama.AppExecutors;
 import io.jqn.busymama.GeofenceBroadcastReceiver;
 import io.jqn.busymama.GeofenceErrorMessages;
@@ -49,6 +52,7 @@ import io.jqn.busymama.database.BusyMamaDatabase;
 import io.jqn.busymama.database.MyPlacesEntry;
 import timber.log.Timber;
 
+import io.jqn.busymama.Constants;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener, OnCompleteListener<Void> {
     // Constants
@@ -85,6 +89,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     // Member Variables
     private BusyMamaDatabase mDatabase;
     private boolean mIsEnabled;
+
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -131,11 +136,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 editor.putBoolean(getString(R.string.setting_enabled), isChecked);
                 mIsEnabled = isChecked;
                 editor.commit();
+
                 if (isChecked) addGeofences();
                 else removeGeofences();
             }
         });
 
+        populateGeofenceList();
         return view;
     }
 
@@ -201,6 +208,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
 
         mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
                 .addOnCompleteListener(this);
+
     }
 
     /**
@@ -278,6 +286,32 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
      * the user's location.
      */
     private void populateGeofenceList() {
+        for (Map.Entry<String, LatLng> entry : Constants.BAY_AREA_LANDMARKS.entrySet()) {
+
+            mGeofenceList.add(new Geofence.Builder()
+                    // Set the request ID of the geofence. This is a string to identify this
+                    // geofence.
+                    .setRequestId(entry.getKey())
+
+                    // Set the circular region of this geofence.
+                    .setCircularRegion(
+                            entry.getValue().latitude,
+                            entry.getValue().longitude,
+                            Constants.GEOFENCE_RADIUS_IN_METERS
+                    )
+
+                    // Set the expiration duration of the geofence. This geofence gets automatically
+                    // removed after this period of time.
+                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+
+                    // Set the transition types of interest. Alerts are only generated for these
+                    // transition. We track entry and exit transitions in this sample.
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                            Geofence.GEOFENCE_TRANSITION_EXIT)
+
+                    // Create the geofence.
+                    .build());
+        }
 
     }
 
@@ -285,9 +319,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
      * Returns true if geofences were added, otherwise false.
      */
     private boolean getGeofencesAdded() {
-//        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-//                Constants.GEOFENCES_ADDED_KEY, false);
-        return false;
+        return PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(
+                Constants.GEOFENCES_ADDED_KEY, false);
     }
 
     /**
@@ -296,10 +329,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
      * @param added Whether geofences were added or removed.
      */
     private void updateGeofencesAdded(boolean added) {
-//        PreferenceManager.getDefaultSharedPreferences(this)
-//                .edit()
-//                .putBoolean(Constants.GEOFENCES_ADDED_KEY, added)
-//                .apply();
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .edit()
+                .putBoolean(Constants.GEOFENCES_ADDED_KEY, added)
+                .apply();
     }
 
     /**
@@ -474,7 +507,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
 //                                startActivity(intent);
 //                            }
 //                        });
-//                mPendingGeofenceTask = PendingGeofenceTask.NONE;
+                mPendingGeofenceTask = PendingGeofenceTask.NONE;
             }
         }
     }

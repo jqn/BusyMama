@@ -135,7 +135,7 @@ public class GeofenceTransitionsJobIntentService  extends JobIntentService {
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Get a notification builder that's compatible with platform versions >= 4
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
 
         // Define the notification settings.
         builder.setSmallIcon(R.drawable.ic_launcher)

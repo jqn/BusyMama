@@ -308,6 +308,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 // Create the geofence.
                 .build());
 
+
     }
 
     /**
@@ -344,7 +345,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     /***
      * Button Click event handler to handle clicking the "Add new location" Button
      *
-     * @param view
+     * @param v
      */
     @Override
     public void onClick(View v) {

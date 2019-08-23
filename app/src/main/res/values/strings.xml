@@ -49,14 +49,15 @@
     <string name="transaction_date_time_label">Date</string>
 
 
-    <!-- Buttons strings -->
+    <!-- Geofences Buttons strings -->
     <string name="add_geofences">Add geofences</string>
     <string name="remove_geofences">Remove geofences</string>
 
     <string name="geofences_added">Geofences added</string>
     <string name="geofences_removed">Geofences removed</string>
+    <string name="geofence_success">Geofence added</string>
 
-    <!-- Error strings -->
+    <!-- Geofences Error strings -->
     <string name="geofence_not_available">Geofence service is not available now</string>
     <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
     <string name="geofence_too_many_pending_intents">
@@ -68,8 +69,9 @@
     <string name="geofence_transition_invalid_type">
         Geofence transition error: invalid transition type %1$d
     </string>
+    <string name="unknown_error">Something unexpected happened. Please try again.</string>
 
-    <!-- Transition type strings -->
+    <!-- Geofences Transition type strings -->
     <string name="geofence_transition_entered">Entered</string>
     <string name="geofence_transition_exited">Exited</string>
     <string name="unknown_geofence_transition">Unknown Transition</string>
@@ -78,9 +80,9 @@
         Click notification to return to app
     </string>
 
+    <!-- Location strings -->
     <string name="insufficient_permissions">Insufficient permissions.</string>
     <string name="permission_rationale">Location permission is needed for core functionality</string>
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.</string>
-    <string name="unknown_error">Something unexpected happened. Please try again.</string>
 </resources>

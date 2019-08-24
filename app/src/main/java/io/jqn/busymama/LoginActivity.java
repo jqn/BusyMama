@@ -29,8 +29,10 @@ public class LoginActivity extends AppCompatActivity {
         final TextInputEditText passwordEditText = findViewById(R.id.password_edit_text);
 
         MaterialButton nextButton = findViewById(R.id.next_button);
+        MaterialButton registerButton = findViewById(R.id.register_button);
 
-        // Set an error if the username is less than  4 characters.
+
+        // Set an error if the username is less than  8 characters.
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,18 +49,13 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // Set an error if the password is less than 8 characters.
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isPasswordValid(passwordEditText.getText())) {
-                    passwordTextInput.setError(getString(R.string.error_password));
-                } else {
-                    passwordTextInput.setError(null); // Clear the error
 
-                    Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

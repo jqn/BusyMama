@@ -26,6 +26,7 @@
     <string name="hint_username">Email</string>
     <string name="hint_password">Password</string>
     <string name="button_next">Login</string>
+    <string name="button_get_registered">Register</string>
     <string name="button_cancel">Cancel</string>
     <!-- Auth error strings -->
     <string name="error_email">Email address is required.</string>

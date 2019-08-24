@@ -77,7 +77,7 @@
                 android:text="@string/button_next" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/cancel_button"
+                android:id="@+id/register_button"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                 android:layout_marginRight="@dimen/margin_padding_size_medium"
                 android:layout_toStartOf="@id/next_button"
                 android:layout_toLeftOf="@id/next_button"
-                android:text="@string/button_cancel" />
+                android:text="@string/button_get_registered" />
 
         </RelativeLayout>
 

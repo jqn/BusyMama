@@ -1,4 +1,4 @@
-package io.jqn.busymama;
+package io.jqn.busymama.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import io.jqn.busymama.BuildConfig;
+import io.jqn.busymama.R;
 import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity {

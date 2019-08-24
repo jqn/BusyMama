@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import io.jqn.busymama.MyPlacesViewModel;
+import io.jqn.busymama.viewmodels.MyPlacesViewModel;
 import io.jqn.busymama.R;
 import io.jqn.busymama.adapters.MyPlacesAdapter;
 import io.jqn.busymama.database.MyPlacesEntry;

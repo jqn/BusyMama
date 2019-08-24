@@ -21,6 +21,7 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.jqn.busymama.ui.DashboardActivity;
 import timber.log.Timber;
 
 public class GeofenceTransitionsJobIntentService  extends JobIntentService {

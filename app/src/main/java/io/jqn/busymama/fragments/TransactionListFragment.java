@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import io.jqn.busymama.MainViewModel;
+import io.jqn.busymama.viewmodels.MainViewModel;
 import io.jqn.busymama.R;
-import io.jqn.busymama.TransactionDetailActivity;
+import io.jqn.busymama.ui.TransactionDetailActivity;
 import io.jqn.busymama.adapters.TransactionAdapter;
 import io.jqn.busymama.database.TransactionEntry;
 import timber.log.Timber;

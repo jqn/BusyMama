@@ -1,9 +1,10 @@
-package io.jqn.busymama;
+package io.jqn.busymama.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.jqn.busymama.database.BusyMamaDatabase;
+import io.jqn.busymama.viewmodels.TransactionDetailViewModel;
 
 public class TransactionDetailViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     // Member variables

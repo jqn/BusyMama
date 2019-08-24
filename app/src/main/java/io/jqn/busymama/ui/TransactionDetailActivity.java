@@ -1,4 +1,4 @@
-package io.jqn.busymama;
+package io.jqn.busymama.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProviders;
 import java.text.NumberFormat;
 import java.util.Currency;
 
+import io.jqn.busymama.R;
+import io.jqn.busymama.viewmodels.TransactionDetailViewModel;
+import io.jqn.busymama.viewmodels.TransactionDetailViewModelFactory;
 import io.jqn.busymama.database.BusyMamaDatabase;
 import io.jqn.busymama.database.TransactionEntry;
 import timber.log.Timber;

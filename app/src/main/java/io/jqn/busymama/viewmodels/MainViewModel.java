@@ -1,4 +1,4 @@
-package io.jqn.busymama;
+package io.jqn.busymama.viewmodels;
 
 import android.app.Application;
 

@@ -1,4 +1,4 @@
-package io.jqn.busymama;
+package io.jqn.busymama.ui;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -47,6 +47,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import io.jqn.busymama.AppExecutors;
+import io.jqn.busymama.R;
 import io.jqn.busymama.database.BusyMamaDatabase;
 import io.jqn.busymama.database.TransactionEntry;
 import io.jqn.busymama.fragments.MyPlacesFragment;

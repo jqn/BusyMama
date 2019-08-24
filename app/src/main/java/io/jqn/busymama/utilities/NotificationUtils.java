@@ -14,7 +14,7 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
-import io.jqn.busymama.DashboardActivity;
+import io.jqn.busymama.ui.DashboardActivity;
 import io.jqn.busymama.R;
 
 public class NotificationUtils {

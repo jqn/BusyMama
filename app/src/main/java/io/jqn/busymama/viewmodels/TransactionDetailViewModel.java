@@ -1,4 +1,4 @@
-package io.jqn.busymama;
+package io.jqn.busymama.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;

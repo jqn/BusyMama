@@ -8,7 +8,7 @@
             android:title="@string/home_label" />
         <item
             android:id="@+id/logout_link"
-            android:icon="@drawable/ic_bookmark_border_black_24dp"
+            android:icon="@drawable/ic_person_lightgray_24dp"
             android:tint="@color/colorPrimaryDark"
             android:title="@string/logout_label" />
     </group>

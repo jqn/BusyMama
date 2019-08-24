@@ -6,7 +6,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="@dimen/margin_padding_size_large"
         android:layout_marginLeft="@dimen/md_keylines"
         android:layout_marginRight="@dimen/md_keylines"
         android:layout_marginTop="@dimen/margin_padding_size_large"
@@ -15,8 +15,8 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginTop="4dp"
+            android:layout_height="@dimen/divider"
+            android:layout_marginTop="@dimen/margin_padding_size_xsmall"
             android:background="@color/colorPrimary" />
 
         <LinearLayout
@@ -28,9 +28,9 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:paddingRight="8dp"
-                android:paddingTop="4dp"
+                android:paddingBottom="@dimen/margin_padding_size_xsmall"
+                android:paddingRight="@dimen/margin_padding_size_small"
+                android:paddingTop="@dimen/margin_padding_size_xsmall"
                 android:src="@drawable/ic_public_black_24dp" />
 
             <Switch
@@ -58,8 +58,8 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginTop="4dp"
+            android:layout_height="@dimen/divider"
+            android:layout_marginTop="@dimen/margin_padding_size_xsmall"
             android:background="@color/colorPrimary" />
 
     </LinearLayout>
@@ -75,14 +75,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="4dp"
+            android:padding="@dimen/margin_padding_size_small"
             android:src="@drawable/ic_geolocation_primary" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="web"
-            android:paddingBottom="4dp"
+            android:paddingBottom="@dimen/margin_padding_size_small"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"
             android:text="@string/privacy"
             android:textAlignment="center" />

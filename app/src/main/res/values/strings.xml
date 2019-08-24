@@ -105,4 +105,8 @@
     <!-- Menu Strings -->
     <string name="logout_label">Log Out</string>
     <string name="home_label">Home</string>
+
+    <!-- Accessibility -->
+    <string name="logo_description">Busy Mama logo</string>
+
 </resources>

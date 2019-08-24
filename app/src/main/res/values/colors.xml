@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="ricepaper">#F2F2F2</color>
     <color name="colorPrimary">#FF5F00</color>
     <color name="colorPrimaryDark">#C42A00</color>

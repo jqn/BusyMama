@@ -58,15 +58,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         View view = LayoutInflater.from(mContext)
                 .inflate(R.layout.item_list, parent, false);
 
-        if (mTransactionEntries.isEmpty()) {
-            view.setVisibility(View.GONE);
-            mEmptyPlacehoder.setVisibility(View.VISIBLE);
-
-        } else {
-            view.setVisibility(View.VISIBLE);
-            mEmptyPlacehoder.setVisibility(View.GONE);
-        }
-
         return new TransactionViewHolder(view);
     }
 

@@ -51,7 +51,7 @@ import io.jqn.busymama.fragments.SettingsFragment;
 import io.jqn.busymama.fragments.TransactionListFragment;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements View.OnKeyListener {
+public class DashboardActivity extends AppCompatActivity implements View.OnKeyListener {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 

@@ -22,6 +22,20 @@
     <string name="enable_geofences">Enable Geofences</string>
     <string name="privacy">http://www.google.com/policies/privacy</string>
 
+    <!-- Login -->
+    <string name="hint_username">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="button_next">Login</string>
+    <string name="button_cancel">Cancel</string>
+    <!-- Auth error strings -->
+    <string name="error_email">Email address is required.</string>
+    <string name="error_invalid_email">Enter a valid email.</string>
+    <string name="error_empty_password">Password is required.</string>
+    <string name="error_password">Password must contain at least 8 characters.</string>
+
+    <!-- Sign up -->
+    <string name="button_register">Register</string>
+
     <string name="dashboard_screen">Dashboard</string>
 
     <!-- Expense placeholder text -->

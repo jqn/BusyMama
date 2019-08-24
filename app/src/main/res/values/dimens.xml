@@ -18,6 +18,8 @@
     <dimen name="card_image_height">200dp</dimen>
     <dimen name="list_body">14sp</dimen>
     <dimen name="navheader_height">222dp</dimen>
+    <dimen name="prgress_indicator_height">32dp</dimen>
+    <dimen name="prgress_indicator_width">32dp</dimen>
 
     <!--
     # Material Design Dimensions
@@ -30,6 +32,7 @@
 -->
 
     <!-- Margins & Padding, 8 dp baseline, https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-baseline-grids -->
+    <dimen name="margin_padding_size_xsmall">4dp</dimen>
     <dimen name="margin_padding_size_small">8dp</dimen>
     <dimen name="margin_padding_size_medium">16dp</dimen>
     <dimen name="margin_padding_size_large">24dp</dimen>

@@ -14,7 +14,7 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
-import io.jqn.busymama.MainActivity;
+import io.jqn.busymama.DashboardActivity;
 import io.jqn.busymama.R;
 
 public class NotificationUtils {
@@ -55,8 +55,8 @@ public class NotificationUtils {
     }
 
     private static PendingIntent contentIntent(Context context) {
-        // Open up MainActivity when notification is clicked
-        Intent startActivityIntent = new Intent(context, MainActivity.class);
+        // Open up DashboardActivity when notification is clicked
+        Intent startActivityIntent = new Intent(context, DashboardActivity.class);
         return  PendingIntent.getActivity(context, EXPENSE_REMINDER_PENDING_INTENT_ID, startActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
     }

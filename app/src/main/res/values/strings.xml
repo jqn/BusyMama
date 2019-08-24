@@ -100,4 +100,8 @@
     <string name="permission_rationale">Location permission is needed for core functionality</string>
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.</string>
+
+    <!-- Menu Strings -->
+    <string name="logout_label">Log Out</string>
+    <string name="home_label">Home</string>
 </resources>

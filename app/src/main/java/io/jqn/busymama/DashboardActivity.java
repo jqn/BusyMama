@@ -1,5 +1,6 @@
 package io.jqn.busymama;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,6 +67,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
     // Member variables
     private DrawerLayout mDrawerLayout;
     private BusyMamaDatabase mDatabase;
+    private FirebaseAuth auth;
 
     // The entry points to the Places API.
     private PlacesClient mPlacesClient;
@@ -131,7 +134,19 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 // Set item checked state
                 menuItem.setChecked(true);
-                // TODO: handle navigation
+
+                // Handle navigation view item clicks here.
+                switch (menuItem.getItemId()) {
+
+                    case R.id.logout_link: {
+                        Timber.d("Logout user");
+                        // Log out the user
+                        auth.signOut();
+                        startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                        finish();
+                        break;
+                    }
+                }
 
                 // Close drawer on item click
                 mDrawerLayout.closeDrawers();
@@ -141,6 +156,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
 
         //  Initialize member variable for the database
         mDatabase = BusyMamaDatabase.getInstance(getApplicationContext());
+
+        // Get Firebase instance
+        auth = FirebaseAuth.getInstance();
 
         Timber.d("Transactions %s", mDatabase.transactionDao().loadAllTransactions());
     }

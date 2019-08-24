@@ -89,7 +89,14 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="@dimen/prgress_indicator_width"
+            android:layout_height="@dimen/prgress_indicator_height"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="@dimen/margin_padding_size_large"
+            android:visibility="gone" />
 
+    </LinearLayout>
 
 </ScrollView>

@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import timber.log.Timber;
 
@@ -90,6 +91,16 @@ public class SignupActivity extends AppCompatActivity {
                         if(!task.isSuccessful()) {
                             Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(), Toast.LENGTH_LONG).show();
                         } else {
+                            FirebaseUser user = auth.getCurrentUser();
+                            user.sendEmailVerification()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Timber.d("Email sent %s", user.getEmail());
+                                            }
+                                        }
+                                    });
                             startActivity(new Intent(SignupActivity.this, DashboardActivity.class));
                             finish();
                         }

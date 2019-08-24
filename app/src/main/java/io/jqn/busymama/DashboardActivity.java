@@ -40,6 +40,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +68,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
     // Member variables
     private DrawerLayout mDrawerLayout;
     private BusyMamaDatabase mDatabase;
-    private FirebaseAuth auth;
 
     // The entry points to the Places API.
     private PlacesClient mPlacesClient;
@@ -77,20 +77,40 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
     private Location mLastKnownLocation;
     private boolean mLocationPermissionGranted;
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Initialize Timber
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
 
         // Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
 
         }
+
+        //get firebase auth instance
+        mAuth = FirebaseAuth.getInstance();
+
+        //get current user
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // this listener will be called when there is change in firebase user session
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
 
         // Prompt the user for permission.
         getLocationPermission();
@@ -141,7 +161,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
                     case R.id.logout_link: {
                         Timber.d("Logout user");
                         // Log out the user
-                        auth.signOut();
+                        mAuth.signOut();
                         startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
                         finish();
                         break;
@@ -156,9 +176,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
 
         //  Initialize member variable for the database
         mDatabase = BusyMamaDatabase.getInstance(getApplicationContext());
-
-        // Get Firebase instance
-        auth = FirebaseAuth.getInstance();
 
         Timber.d("Transactions %s", mDatabase.transactionDao().loadAllTransactions());
     }

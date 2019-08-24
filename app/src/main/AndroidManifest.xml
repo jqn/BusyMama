@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".SignupActivity"/>
         <activity android:name=".DashboardActivity" />
         <activity android:name=".TransactionDetailActivity" />
         <activity android:name=".BusyMamaFirebaseMessagingService$TransactionDetailActivity" />

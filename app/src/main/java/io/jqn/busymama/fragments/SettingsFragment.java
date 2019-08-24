@@ -60,7 +60,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
      */
     private GeofencingClient mGeofencingClient;
 
-    /**`
+    /**
+     * `
      * The list of geofences used in this sample.
      */
     private ArrayList<Geofence> mGeofenceList;
@@ -128,7 +129,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 editor.putBoolean(getString(R.string.setting_enabled), isChecked);
                 mIsEnabled = isChecked;
                 editor.commit();
-
             }
         });
 
@@ -172,17 +172,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         return builder.build();
     }
 
-    /**
-     * Adds geofences, which sets alerts to be notified when the device enters or exits one of the
-     * specified geofences. Handles the success or failure results returned by addGeofences().
-     */
-    public void addGeofencesButtonHandler(View view) {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getContext(), getString(R.string.need_location_permission_message), Toast.LENGTH_LONG).show();
-            return;
-        }
-        addGeofences();
-    }
 
     /**
      * Adds geofences. This method should be called after the user has granted the location
@@ -200,18 +189,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
 
     }
 
-    /**
-     * Removes geofences, which stops further notifications when the device enters or exits
-     * previously registered geofences.
-     */
-    public void removeGeofencesButtonHandler(View view) {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getContext(), getString(R.string.need_location_permission_message), Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        removeGeofences();
-    }
 
     /**
      * Removes geofences. This method should be called after the user has granted the location
@@ -270,12 +247,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     }
 
     /**
-     * This sample hard codes geofence data. A real app might dynamically create geofences based on
-     * the user's location.
+     * Create geofences based on the user's location.
      */
     private void populateGeofenceList(String id, LatLng coords) {
-        Timber.d("Geolocation place id %s", id);
-        Timber.d("Geolocation latitude %s", coords);
 
         mGeofenceList.add(new Geofence.Builder()
                 // Set the request ID of the geofence. This is a string to identify this
@@ -390,10 +364,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                                 mLikelyPlaceAddresses[i] = currentPlace.getAddress();
                                 mLikelyPlaceLatLngs[i] = currentPlace.getLatLng();
 
-                                Timber.d("On Complete find %s", placeLikelihood.getPlace());
-
-                                Timber.d("likelyPlaces %s", placeLikelihood.getPlace().getName());
-
                                 i++;
                                 if (i > (count - 1)) {
                                     break;
@@ -424,17 +394,21 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
                 String placeAddress = mLikelyPlaceAddresses[which];
                 LatLng placeLatLng = mLikelyPlaceLatLngs[which];
 
-                // Assign current date
-                Date date = new Date();
-                // Insert new place into DB
-                final MyPlacesEntry myPlacesEntry = new MyPlacesEntry(placeID, placeName, placeAddress, date);
-                AppExecutors.getInstance().diskIO().execute((new Runnable() {
-                    @Override
-                    public void run() {
-                        mDatabase.myPlacesDao().insertMyPlace(myPlacesEntry);
-                    }
-                }));
-                if (mIsEnabled) populateGeofenceList(mPlaceIds[which], mLikelyPlaceLatLngs[which]);
+                if (mIsEnabled) {
+                    // Assign current date
+                    Date date = new Date();
+                    // Insert new place into DB
+                    final MyPlacesEntry myPlacesEntry = new MyPlacesEntry(placeID, placeName, placeAddress, date);
+                    AppExecutors.getInstance().diskIO().execute((new Runnable() {
+                        @Override
+                        public void run() {
+                            mDatabase.myPlacesDao().insertMyPlace(myPlacesEntry);
+                        }
+                    }));
+                    populateGeofenceList(mPlaceIds[which], mLikelyPlaceLatLngs[which]);
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.need_enable_geofences), Toast.LENGTH_LONG).show();
+                }
 
             }
         };

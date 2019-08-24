@@ -21,6 +21,7 @@
     <string name="location_permissions">Location Permissions</string>
     <string name="enable_geofences">Enable Geofences</string>
     <string name="privacy">http://www.google.com/policies/privacy</string>
+    <string name="need_enable_geofences">You need to enable Geofences first</string>
 
     <!-- Login -->
     <string name="hint_username">Email</string>

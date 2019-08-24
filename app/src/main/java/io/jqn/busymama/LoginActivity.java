@@ -3,9 +3,8 @@ package io.jqn.busymama;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.view.KeyEvent;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,8 +25,10 @@ import timber.log.Timber;
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private EditText mEmailField;
-    private EditText mPasswordField;
+    private TextInputEditText mEmailField;
+    private TextInputEditText mPasswordField;
+    private TextInputLayout mEmailInput;
+    private TextInputLayout mPasswordInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +43,10 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        final TextInputLayout userTextInput = findViewById(R.id.user_text_input);
-        final TextInputEditText userEditText = findViewById(R.id.user_edit_text);
-        final TextInputLayout passwordTextInput = findViewById(R.id.password_text_input);
-        final TextInputEditText passwordEditText = findViewById(R.id.password_edit_text);
+        mEmailInput = findViewById(R.id.user_text_input);
+        mEmailField = findViewById(R.id.user_edit_text);
+        mPasswordInput = findViewById(R.id.password_text_input);
+        mPasswordField = findViewById(R.id.password_edit_text);
 
         MaterialButton nextButton = findViewById(R.id.next_button);
         MaterialButton registerButton = findViewById(R.id.register_button);
@@ -55,16 +56,16 @@ public class LoginActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isPasswordValid(passwordEditText.getText())) {
-                    passwordTextInput.setError(getString(R.string.error_password));
-                } else {
-                    passwordTextInput.setError(null); // Clear the error
-                    signIn(userEditText.getText().toString().trim(), passwordEditText.getText().toString().trim());
+                if (!validateForm()) {
+                    return;
                 }
+
+                signIn(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
+
             }
         });
 
-        // Set an error if the password is less than 8 characters.
+
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,16 +76,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Clear the error once more than 8 characters are typed.
-        passwordEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (isPasswordValid(passwordEditText.getText())) {
-                    passwordTextInput.setError(null); //Clear the error
-                }
-                return false;
-            }
-        });
 
     }
 
@@ -133,21 +124,22 @@ public class LoginActivity extends AppCompatActivity {
     private boolean validateForm() {
         boolean valid = true;
 
-        String email = mU.getText().toString();
+        String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailField.setError("Required.");
+            mEmailField.setError(getString(R.string.error_email));
             valid = false;
         } else {
-            mEmailField.setError(null);
+            mEmailInput.setError(null);
         }
 
         String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            mPasswordField.setError("Required.");
+            mPasswordField.setError(getString(R.string.error_empty_password));
             valid = false;
         } else {
-            mPasswordField.setError(null);
+            mPasswordInput.setError(null);
         }
+
 
         return valid;
     }

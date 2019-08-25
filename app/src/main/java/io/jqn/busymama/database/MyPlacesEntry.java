@@ -3,17 +3,20 @@ package io.jqn.busymama.database;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-@Entity(tableName = "myplaces")
+@Entity(tableName = "myplaces", indices = {@Index(value={"place_id"})})
 public class MyPlacesEntry {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String placeId;
     private String placeName;
     private String placeAddress;
+
+    @ColumnInfo(name = "place_id")
+    private String placeId;
 
     @ColumnInfo(name = "updated_at")
     private Date updatedAt;

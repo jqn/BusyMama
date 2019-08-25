@@ -111,7 +111,7 @@
     <string name="logo_description">Busy Mama logo</string>
     <string name="appwidget_text">LAST TRANSACTION</string>
     <string name="appwidget_amount_description">Transaction amount</string>
-    <string name="appwidget_transaction_amount">104.32</string>
+    <string name="appwidget_transaction_amount">0.00</string>
     <string name="appwidget_placeholder_amount">0.00</string>
     <string name="add_widget">Add widget</string>
 

@@ -28,8 +28,7 @@ public class BusyMamaWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         // Widgets allow click handlers to only launch pending intents
-//        views.setOnClickPendingIntent(R.id.transaction_container, pendingIntent);
-        views.setOnClickPendingIntent(R.id.appwidget_title, pendingIntent);
+        views.setOnClickPendingIntent(R.id.transaction_container, pendingIntent);
 
         Intent lastTransactionIntent = new Intent(context, LatestTransactionService.class);
         lastTransactionIntent.setAction(LatestTransactionService.ACTION_GET_LAST_TRANSACTION);
@@ -57,6 +56,9 @@ public class BusyMamaWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
+        Intent lastTransactionIntent = new Intent(context, LatestTransactionService.class);
+        lastTransactionIntent.setAction(LatestTransactionService.ACTION_GET_LAST_TRANSACTION);
+        PendingIntent lastTransactionPendingIntent = PendingIntent.getService(context, 0, lastTransactionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override

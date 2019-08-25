@@ -11,12 +11,25 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resValue "string", "busymama_api_key", (project.findProperty("BusyMama_ApiKey") ?: "")
     }
+
+    signingConfigs {
+        release {
+            if (project.hasProperty('BUSYMAMA_UPLOAD_STORE_FILE')) {
+                storeFile file(BUSYMAMA_UPLOAD_STORE_FILE)
+                storePassword BUSYMAMA_UPLOAD_STORE_PASSWORD
+                keyAlias BUSYMAMA_UPLOAD_KEY_ALIAS
+                keyPassword BUSYMAMA_UPLOAD_KEY_PASSWORD
+            }
+        }
+    }
+
     buildTypes {
         debug {
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     // Butterknife requires Java 8.

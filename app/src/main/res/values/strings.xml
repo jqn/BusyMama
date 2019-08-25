@@ -64,6 +64,7 @@
     <string name="transaction_detail_location_title">Location</string>
     <string name="transaction_amount_label">Amount</string>
     <string name="transaction_date_time_label">Date</string>
+    <string name="empty_text_error">Please enter a valid amount</string>
 
 
     <!-- Geofences Buttons strings -->

@@ -310,24 +310,29 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
                                 } else {
                                     current_place = "no location";
                                 }
+
                                 // This crashes the app because mEditText is empty
+                                if (!mEditText.getText().toString().isEmpty()) {
+                                    float amount = Float.parseFloat(mEditText.getText().toString());
+                                    // assing current location to place
+                                    String place = current_place;
+                                    // Assign current date
+                                    Date date = new Date();
+                                    Timber.d("date %s", date);
+                                    // Clear the text input
+                                    mEditText.getText().clear();
 
-                                float amount = Float.parseFloat(mEditText.getText().toString());
-                                // assing current location to place
-                                String place = current_place;
-                                // Assign current date
-                                Date date = new Date();
-                                Timber.d("date %s", date);
-                                // Clear the text input
-                                mEditText.getText().clear();
+                                    final TransactionEntry transactionEntry = new TransactionEntry(amount, place, date);
+                                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mDatabase.transactionDao().insertTransaction(transactionEntry);
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(DashboardActivity.this, getString(R.string.empty_text_error), Toast.LENGTH_LONG).show();
+                                }
 
-                                final TransactionEntry transactionEntry = new TransactionEntry(amount, place, date);
-                                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mDatabase.transactionDao().insertTransaction(transactionEntry);
-                                    }
-                                });
 
                             } else {
                                 Exception exception = task.getException();
@@ -412,7 +417,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
             Timber.d("amount %s", mEditText.getText());
             // assign edit text value to amount
             if (mEditText.getText().toString().matches("")) {
-                Toast toast = Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(this, getString(R.string.empty_text_error), Toast.LENGTH_LONG);
                 toast.show();
             } else {
                 showCurrentPlace();

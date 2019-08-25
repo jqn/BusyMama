@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -27,7 +28,8 @@
                 android:resource="@xml/busy_mama_widget_provider_info" />
         </receiver>
 
-        <service android:name=".LatestTransactionService" />
+        <service android:name=".LatestTransactionService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <activity android:name=".ui.SignupActivity" />
         <activity android:name=".ui.DashboardActivity" />

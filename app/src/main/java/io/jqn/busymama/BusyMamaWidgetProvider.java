@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import io.jqn.busymama.ui.DashboardActivity;
 import io.jqn.busymama.ui.LoginActivity;
+import timber.log.Timber;
 
 /**
  * Implementation of App Widget functionality.
@@ -17,15 +19,16 @@ public class BusyMamaWidgetProvider extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, double transactionAmount,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_placeholder_amount);
+        // Create an intent to launch LoginActivity when clicked
+        Intent intent = new Intent(context, DashboardActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        Timber.d("Upldate widget now %s", transactionAmount);
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.busy_mama_widget_provider);
-
+        // Update transaction amount
         views.setTextViewText(R.id.transaction_amount, Double.toString(transactionAmount));
-
-        // Create an intent to launch LoginActivity when clicked
-        Intent intent = new Intent(context, LoginActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.transaction_container, pendingIntent);
@@ -42,6 +45,7 @@ public class BusyMamaWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
         //Start the intent service update widget action, the service takes care of updating the widgets UI
         LatestTransactionService.startActionLatestTransaction(context);
     }
@@ -59,6 +63,7 @@ public class BusyMamaWidgetProvider extends AppWidgetProvider {
         Intent lastTransactionIntent = new Intent(context, LatestTransactionService.class);
         lastTransactionIntent.setAction(LatestTransactionService.ACTION_GET_LAST_TRANSACTION);
         PendingIntent lastTransactionPendingIntent = PendingIntent.getService(context, 0, lastTransactionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
     }
 
     @Override

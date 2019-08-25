@@ -3,7 +3,6 @@ package io.jqn.busymama;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 
@@ -35,7 +34,10 @@ public class LatestTransactionService extends IntentService {
     public static void startActionLatestTransaction(Context context) {
         Intent intent = new Intent(context, LatestTransactionService.class);
         intent.setAction(ACTION_GET_LAST_TRANSACTION);
+
+
         context.startService(intent);
+
     }
 
     /**
@@ -54,13 +56,12 @@ public class LatestTransactionService extends IntentService {
 
 
     /**
-     * Handle action WaterPlant in the provided background thread with the provided
+     * Handle action getLastTransaction in the provided background thread with the provided
      * parameters.
      */
     private void handleGetLastTransaction() {
         // Initialize database member variable
         mDatabase = BusyMamaDatabase.getInstance(getApplicationContext());
-//        long timeNow = System.currentTimeMillis();
 
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
@@ -68,6 +69,10 @@ public class LatestTransactionService extends IntentService {
                 TransactionEntry transaction = mDatabase.transactionDao().loadTransactionByMaxId();
                 if (transaction != null) {
                     updateWidgetsAmount(transaction.getAmount());
+                } else {
+                    Timber.d("transaction is null");
+                    double dummyAmount = 0.00;
+                    updateWidgetsAmount(dummyAmount);
                 }
 
             }
@@ -76,6 +81,7 @@ public class LatestTransactionService extends IntentService {
     }
 
     private void updateWidgetsAmount(double transactionAmount) {
+        Timber.d("update busy mama widget called");
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int [] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, BusyMamaWidgetProvider.class));
         // Update all widgets

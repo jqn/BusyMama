@@ -15,12 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import io.jqn.busymama.viewmodels.MainViewModel;
 import io.jqn.busymama.R;
-import io.jqn.busymama.ui.TransactionDetailActivity;
 import io.jqn.busymama.adapters.TransactionAdapter;
 import io.jqn.busymama.database.TransactionEntry;
-import timber.log.Timber;
+import io.jqn.busymama.ui.TransactionDetailActivity;
+import io.jqn.busymama.viewmodels.MainViewModel;
 
 /**
  * Provides UI for the expenses view.
@@ -39,7 +38,6 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-        Timber.d("on attach");
     }
 
     @Override
@@ -64,7 +62,6 @@ public class TransactionListFragment extends Fragment implements TransactionAdap
     @Override
     public void onResume() {
         super.onResume();
-        Timber.d("Timbeeeeeer! on resume");
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.Date;
 public class MyPlacesEntry {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String  placeId;
+    private String placeId;
     private String placeName;
     private String placeAddress;
 

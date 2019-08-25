@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/transaction_container"
+    android:layout_width="@dimen/widget_minwidth"
+    android:layout_height="wrap_content"
+    android:background="@color/ricepaper"
+    android:padding="@dimen/widget_margin">
+
+    <TextView
+        android:id="@+id/appwidget_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_padding_size_xsmall"
+        android:contentDescription="@string/appwidget_text"
+        android:text="@string/appwidget_text"
+        android:textColor="@color/black"
+        android:textSize="@dimen/widget_title_text"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/dollar_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_padding_size_xsmall"
+        android:src="@drawable/ic_attach_money_primarycolor_24dp"
+        android:layout_below="@+id/appwidget_title"/>
+
+    <TextView
+        android:id="@+id/transaction_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/appwidget_transaction_amount"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_marginBottom="@dimen/margin_padding_size_small"
+        android:layout_below="@+id/appwidget_title"
+        android:layout_toEndOf="@+id/dollar_icon"
+        android:contentDescription="@string/appwidget_amount_description"
+        />
+
+
+
+</RelativeLayout>

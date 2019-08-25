@@ -27,4 +27,7 @@ public interface TransactionDao {
 
     @Query("SELECT * FROM `transaction` WHERE id = :id")
     LiveData<TransactionEntry> loadTransactionById(int id);
+
+    @Query("SELECT * FROM `transaction` ORDER BY id DESC LIMIT 1")
+    TransactionEntry loadTransactionByMaxId();
 }

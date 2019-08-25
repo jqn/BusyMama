@@ -61,5 +61,14 @@
 
     <dimen name="divider">2dp</dimen>
 
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_title_text">12sp</dimen>
+    <dimen name="widget_minwidth">240dp</dimen>
+    <dimen name="widget_minheight">60dp</dimen>
+
 
 </resources>

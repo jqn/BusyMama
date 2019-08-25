@@ -179,7 +179,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
         //  Initialize member variable for the database
         mDatabase = BusyMamaDatabase.getInstance(getApplicationContext());
 
-        Timber.d("Transactions %s", mDatabase.transactionDao().loadAllTransactions());
     }
 
     /**

@@ -326,7 +326,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
      */
     @Override
     public void onComplete(@NonNull Task<Void> task) {
-        Timber.d("Geofence oncomplete");
+        Timber.d("Geofence oncomplete %s", task);
         mPendingGeofenceTask = PendingGeofenceTask.NONE;
         if (task.isSuccessful()) {
             updateGeofencesAdded(!getGeofencesAdded());

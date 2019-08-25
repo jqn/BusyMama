@@ -17,7 +17,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.SignupActivity"/>
+        <receiver android:name=".BusyMamaWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/busy_mama_widget_provider_info" />
+        </receiver>
+
+        <service android:name=".LatestTransactionService" />
+
+        <activity android:name=".ui.SignupActivity" />
         <activity android:name=".ui.DashboardActivity" />
         <activity android:name=".ui.TransactionDetailActivity" />
         <activity android:name=".BusyMamaFirebaseMessagingService$TransactionDetailActivity" />
@@ -42,7 +54,7 @@
         <activity
             android:name=".ui.LoginActivity"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,11 +69,10 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service> <!-- [END firebase_service] -->
-        <provider
-            android:name=".provider.PlaceContentProvider"
-            android:authorities="io.jqn.busymama"
-            android:exported="false" />
-
+        <!-- <provider -->
+        <!-- android:name=".provider.PlaceContentProvider" -->
+        <!-- android:authorities="io.jqn.busymama" -->
+        <!-- android:exported="false" /> -->
         <receiver
             android:name=".GeofenceBroadcastReceiver"
             android:enabled="true"

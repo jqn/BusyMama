@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-@Entity(tableName = "myplaces", indices = {@Index(value={"place_id"})})
+@Entity(tableName = "myplaces", indices = {@Index(value={"place_id"}, unique = true)})
 public class MyPlacesEntry {
     @PrimaryKey(autoGenerate = true)
     private int id;

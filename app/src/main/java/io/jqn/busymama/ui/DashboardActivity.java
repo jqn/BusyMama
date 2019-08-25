@@ -315,7 +315,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnKeyLi
                                 float amount = Float.parseFloat(mEditText.getText().toString());
                                 // assing current location to place
                                 String place = current_place;
-
                                 // Assign current date
                                 Date date = new Date();
                                 Timber.d("date %s", date);

@@ -66,8 +66,9 @@ public class LatestTransactionService extends IntentService {
             @Override
             public void run() {
                 TransactionEntry transaction = mDatabase.transactionDao().loadTransactionByMaxId();
-                Timber.d("Latest transaction %s", transaction.getAmount());
-                updateWidgetsAmount(transaction.getAmount());
+                if (transaction != null) {
+                    updateWidgetsAmount(transaction.getAmount());
+                }
 
             }
         });

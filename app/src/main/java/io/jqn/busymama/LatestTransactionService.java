@@ -1,6 +1,8 @@
 package io.jqn.busymama;
 
 import android.app.IntentService;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -65,10 +67,17 @@ public class LatestTransactionService extends IntentService {
             public void run() {
                 TransactionEntry transaction = mDatabase.transactionDao().loadTransactionByMaxId();
                 Timber.d("Latest transaction %s", transaction.getAmount());
+                updateWidgetsAmount(transaction.getAmount());
+
             }
         });
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put( mDatabase.transactionDao().loadTransactionByMaxId().toString(), timeNow);
-//        getContentResolver().update();
+
+    }
+
+    private void updateWidgetsAmount(double transactionAmount) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int [] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, BusyMamaWidgetProvider.class));
+        // Update all widgets
+        BusyMamaWidgetProvider.updateBusyMamaWidgets(this, appWidgetManager, transactionAmount, appWidgetIds);
     }
 }

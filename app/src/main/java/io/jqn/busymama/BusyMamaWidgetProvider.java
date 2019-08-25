@@ -7,25 +7,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
-
 import io.jqn.busymama.ui.LoginActivity;
-import io.jqn.busymama.viewmodels.TransactionDetailViewModel;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class BusyMamaWidgetProvider extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, double transactionAmount,
                                 int appWidgetId) {
 
         CharSequence widgetText = context.getString(R.string.appwidget_placeholder_amount);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.busy_mama_widget_provider);
 
-        views.setTextViewText(R.id.transaction_amount, widgetText);
+        views.setTextViewText(R.id.transaction_amount, Double.toString(transactionAmount));
 
         // Create an intent to launch LoginActivity when clicked
         Intent intent = new Intent(context, LoginActivity.class);
@@ -47,9 +43,14 @@ public class BusyMamaWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
+        //Start the intent service update widget action, the service takes care of updating the widgets UI
+        LatestTransactionService.startActionLatestTransaction(context);
+    }
+
+
+    public static void updateBusyMamaWidgets(Context context, AppWidgetManager appWidgetManager, double transactionAmount, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            updateAppWidget(context, appWidgetManager, transactionAmount, appWidgetId);
         }
     }
 

@@ -32,7 +32,7 @@
             android:id="@+id/transaction_entry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_attach_money_primarycolor_24dp"
+            android:drawableStart="@drawable/ic_attach_money_primarycolor_24dp"
             android:inputType="numberDecimal"
             android:maxLines="1"/>
 

@@ -29,9 +29,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_padding_size_xsmall"
-                android:paddingRight="@dimen/margin_padding_size_small"
+                android:paddingEnd="@dimen/margin_padding_size_small"
+                android:paddingStart="@dimen/margin_padding_size_xsmall"
                 android:paddingTop="@dimen/margin_padding_size_xsmall"
-                android:src="@drawable/ic_public_black_24dp" />
+                android:src="@drawable/ic_public_black_24dp"
+                android:contentDescription="@string/geofencing_icon_description"/>
 
             <Switch
                 android:id="@+id/enable_switch"
@@ -50,7 +52,6 @@
             android:layout_marginTop="12dp"
             android:background="@color/colorPrimary"
             android:layout_marginBottom="@dimen/margin_padding_size_large"
-            android:onClick="onAddPlaceButtonClicked"
             android:text="@string/add_new_location"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textColor="@android:color/white" />
@@ -76,7 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="@dimen/margin_padding_size_small"
-            android:src="@drawable/ic_geolocation_primary" />
+            android:src="@drawable/ic_geolocation_primary"
+            android:contentDescription="@string/google_attribution_icon_description"/>
 
         <TextView
             android:layout_width="match_parent"

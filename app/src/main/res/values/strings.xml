@@ -110,6 +110,12 @@
 
     <!-- Accessibility -->
     <string name="logo_description">Busy Mama logo</string>
+    <string name="geofencing_icon_description">Activate geofences icon</string>
+    <string name="google_attribution_icon_description">Google attribution icon</string>
+    <string name="widget_dollar_icon">Dollar icon</string>
+    <string name="place_image_description">Place image</string>
+
+    <!-- App widget -->
     <string name="appwidget_text">LAST TRANSACTION</string>
     <string name="appwidget_amount_description">Transaction amount</string>
     <string name="appwidget_transaction_amount">0.00</string>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,13 +20,14 @@
             android:layout_height="@dimen/card_image_height"
             android:scaleType="centerCrop"
             android:src="@drawable/fruits_veggies"
-            tools:src="@drawable/fruits_veggies" />
+            tools:src="@drawable/fruits_veggies"
+            android:contentDescription="@string/place_image_description"/>
 
         <TextView
             android:id="@+id/card_title"
             android:layout_width="match_parent"
             android:layout_height="@dimen/card_title_height"
-            android:layout_marginLeft="@dimen/md_keylines"
+            android:layout_marginStart="@dimen/md_keylines"
             android:layout_alignBottom="@+id/card_image"
             tools:text="@string/item_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"

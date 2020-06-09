@@ -24,3 +24,6 @@ Download or clone this repo on your machine, open the project using Android Stud
 - Users can sign up or login using their email
 - Users can add their favorite shopping places
 - Users can track their expenses
+
+## License
+MIT

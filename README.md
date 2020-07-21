@@ -2,7 +2,10 @@
 
 ## Project Summary
 
-Busy Mama uses geolocation to recognize shop locations and remind the user to update their budget with the latest expense. Busy Mama also uses Firebase to authenticate, to store shoping location and spending data.
+Busy Mama uses geolocation to recognize shop locations and remind the user to update their budget with the latest expense.
+Busy Mama also uses Firebase to authenticate, to store shoping location and spending data.
+
+![Reference Designs](./screenshots/screens.png)
 
 ## Pre-requisites
 
@@ -26,4 +29,5 @@ Download or clone this repo on your machine, open the project using Android Stud
 - Users can track their expenses
 
 ## License
+
 MIT
